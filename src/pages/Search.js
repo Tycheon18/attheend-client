@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
-import BookSearch from '../components/BookSearch/BookSearch';
 import BookList from '../components/BookList/BookList';
 
 const Search = () => {

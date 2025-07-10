@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import './App.css';
 import Layout from './components/Layout/Layout';
-import BookSearch from './components/BookSearch/BookSearch';
-import BookList from './components/BookList/BookList';
+import BookSearch from './components/Search/BookSearch';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -28,17 +28,37 @@ function reducer(state, action) {
 
       return newState;
     }
+    default: {
+      return state;
+    }
   }
 }
 
 function App() {
-  const [book, dispatch] = useReducer(reducer, []);
+  const [books, dispatch] = useReducer(reducer, []);
+
+  useEffect(() => {
+
+    dispatch({ type: 'INIT', data: [] });
+  })
 
   return (
-    <Layout>
-      <BookSearch />
-      <BookList />
-    </Layout>
+    <BookStateContext.Provider value={books}>
+      <BookDispatchContext.Provider value={dispatch}>
+        <BrowserRouter>
+          <Routes>
+            <Route  
+              path="/"
+              element={
+                <Layout>
+                   
+                </Layout>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </BookDispatchContext.Provider>
+    </BookStateContext.Provider>
   );
 }
 
