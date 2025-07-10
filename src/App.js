@@ -3,6 +3,7 @@ import './App.css';
 import Layout from './components/Layout/Layout';
 import BookSearch from './components/Search/BookSearch';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Main from './pages/Main';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -47,14 +48,7 @@ function App() {
       <BookDispatchContext.Provider value={dispatch}>
         <BrowserRouter>
           <Routes>
-            <Route  
-              path="/"
-              element={
-                <Layout>
-                   
-                </Layout>
-              }
-            />
+            <Route path="/" element={<Layout><Main /></Layout>} />
           </Routes>
         </BrowserRouter>
       </BookDispatchContext.Provider>

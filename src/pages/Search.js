@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '../components/Layout/Layout';
-import BookList from '../components/BookList/BookList';
+import BookList from '../components/List/BookList';
 
 const Search = () => {
     return (

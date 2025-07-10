@@ -5,7 +5,9 @@
 }
 
 .main {
+    height: 200px;
     flex: 1;
     padding: 2rem;
-    background-color: #f5f5f5;
+    background-color: #c8f5f5 /*#f5f5f5*/;
+    border-radius: 10px 10px 10px 50px;
 }
