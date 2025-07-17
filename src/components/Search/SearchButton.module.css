@@ -1,0 +1,12 @@
+.button_wrapper {
+    position: relative;
+}
+
+.button_wrapper button {
+    width: 120px;
+    height: 50px;
+    line-height: 40px;
+    border: none;
+    flex: auto;
+    border-radius: 15px;
+}

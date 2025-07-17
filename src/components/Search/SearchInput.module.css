@@ -1,0 +1,15 @@
+.input_wrapper {
+    position: relative;
+
+}
+
+.input_wrapper input {
+    width: 350px;
+    padding: 0px;
+    margin: 0 10px;
+    flex: auto;
+    border: none;
+    outline: none;
+    height: 50px;
+
+}

@@ -1,6 +1,15 @@
-const SearchButton = () => {
+import styles from './SearchButton.module.css';
+
+const SearchButton = ({ onClick, disabled }) => {
     return (
-        <button>검색 버튼</button>
+        <div className={styles.button_wrapper}>
+            <button
+                onClick={onClick}
+                disabled={disabled}
+            >
+                {disabled ? "검색중..." : "검색"}
+            </button>
+        </div>
     );
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import './App.css';
 import Layout from './components/Layout/Layout';
-import BookSearch from './components/Search/BookSearch';
+import BookSearch from './components/Search/SearchBook';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
 
@@ -41,7 +41,7 @@ function App() {
   useEffect(() => {
 
     dispatch({ type: 'INIT', data: [] });
-  })
+  }, [])
 
   return (
     <BookStateContext.Provider value={books}>

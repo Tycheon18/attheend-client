@@ -1,4 +1,29 @@
 .Bar {
     display: flex;
-    justify-content: space-between;
+    flex-basis: 150px;
+    background: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    justify-content: space-around;
+    box-shadow: 0 8px 6px -10px ;
+    align-items: center;
+}
+
+.category_wrapper {
+    border-right: 2px solid #dde2f1;
+    padding-right: 20px;
+    height: 50px;
+}
+
+.category_wrapper select {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
 }
