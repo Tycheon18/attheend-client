@@ -1,4 +1,6 @@
 .BookListItem {
+  display: flex;
+  height: 250px;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid 
@@ -14,8 +16,8 @@
 
   box-sizing:         border-box;
   display: block;
-  width: 100%;
   max-width: 320px;
+  height: 80%;
   border: .1em solid #ccc;
   margin: 1em 20px 1em 0;
   box-shadow: 5px 5px 3px 3px #555555
