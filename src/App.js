@@ -1,9 +1,12 @@
 import React, { useEffect, useReducer } from 'react';
 import './App.css';
 import Layout from './components/Layout/Layout';
-import BookSearch from './components/Search/SearchBook';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
+import Search from './pages/Search';
+import New from './pages/New';
+import Edit from './pages/Edit';
+import Gallary from './pages/Gallary';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -49,6 +52,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout><Main /></Layout>} />
+            <Route path="/search" element={<Layout><Search /></Layout>} />
+            <Route path="/new" element={<Layout><New /></Layout>} />
+            <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
+            <Route path="/gallary" element={<Layout><Gallary /></Layout>} />
           </Routes>
         </BrowserRouter>
       </BookDispatchContext.Provider>
