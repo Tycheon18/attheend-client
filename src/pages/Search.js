@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import BookList from '../components/List/BookList';
 import SearchBar from '../components/Search/SearchBar';
+import Pagination from '../components/Pagination/Pagination';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -75,8 +76,11 @@ const Search = () => {
     };
 
     const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
-    const handlePrev = () => setPage((p) => Math.max(1, p - 1));
-    const handleNext = () => setPage((p) => Math.min(totalPages, p + 1));
+    
+    // 페이지 변경 핸들러
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+    };
 
     return (
         <div>
@@ -95,12 +99,14 @@ const Search = () => {
             {/* 검색 결과 */}
             <BookList data={results} loading={loading} error={error} />
             {/* 페이지네이션 */}
-            {!loading && !error && totalPages > 1 && (
-                <div style={{ marginTop: '16px', textAlign: 'center' }}>
-                    <button onClick={handlePrev} disabled={page === 1}>이전</button>
-                    <span style={{ margin: '0 12px' }}>{page} / {totalPages}</span>
-                    <button onClick={handleNext} disabled={page === totalPages}>다음</button>
-                </div>
+            {!loading && !error && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    totalCount={totalCount}
+                    onPageChange={handlePageChange}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                />
             )}
         </div>
     );

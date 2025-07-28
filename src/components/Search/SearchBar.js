@@ -39,18 +39,21 @@ const SearchBar = ({ onSearch }) => {
     }
 
     return (
-        <div className={styles.Bar}>
-            <div className={styles.category_wrapper}>
-                <select value={category} onChange={onChangeCategoryType}>
-                    {searchCategoryList.map((it, idx) => (
-                        <option key={idx} value={it.value}>
-                            {it.label}
-                        </option>
-                    ))}
-                </select>
-            </div>    
-            <SearchInput value={query} onChange={onChangeQuery} />
-            <SearchButton onClick={handleClick} disabled={loading} />
+        <div className={styles.searchContainer}>
+
+            <div className={styles.Bar}>
+                <div className={styles.category_wrapper}>
+                    <select value={category} onChange={onChangeCategoryType}>
+                        {searchCategoryList.map((it, idx) => (
+                            <option key={idx} value={it.value}>
+                                {it.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>    
+                <SearchInput value={query} onChange={onChangeQuery} />
+                <SearchButton onClick={handleClick} disabled={loading} />
+            </div>
         </div>
     );
 }
