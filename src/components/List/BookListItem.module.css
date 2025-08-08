@@ -1,33 +1,89 @@
 .BookListItem {
   display: flex;
-  height: 250px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid 
+  min-height: 280px;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+  align-items: flex-start;
 }
 
 .thumbnail_wrapper {
   position: relative;
-  float: left;
+  flex-shrink: 0;
   padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
 }
 
 .cover {
-
-  box-sizing:         border-box;
+  box-sizing: border-box;
   display: block;
-  max-width: 320px;
-  height: 80%;
-  border: .1em solid #ccc;
-  margin: 1em 20px 1em 0;
-  box-shadow: 5px 5px 3px 3px #555555
+  max-width: 150px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
 }
 
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 120px;
+}
+
+.reviewButton {
+  padding: 6px 8px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.reviewButton:hover {
+  background-color: #218838;
+}
+
+.reviewButton:active {
+  background-color: #1e7e34;
+}
+
+.contentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
 
 .title {
-  font-size: 1.5em;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: #333;
+  line-height: 1.3;
 }
 
 .author {
-  font-size: .9em;
+  font-size: 0.9em;
+  color: #666;
+  margin: 0 0 12px 0;
+  font-style: italic;
+}
+
+.description {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.4;
+  margin: 0;
+  flex: 1;
 }

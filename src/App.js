@@ -6,7 +6,7 @@ import Main from './pages/Main';
 import Search from './pages/Search';
 import New from './pages/New';
 import Edit from './pages/Edit';
-import Gallary from './pages/Gallary';
+import Gallery from './pages/Gallery';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -55,7 +55,7 @@ function App() {
             <Route path="/search" element={<Layout><Search /></Layout>} />
             <Route path="/new" element={<Layout><New /></Layout>} />
             <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
-            <Route path="/gallary" element={<Layout><Gallary /></Layout>} />
+            <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
           </Routes>
         </BrowserRouter>
       </BookDispatchContext.Provider>

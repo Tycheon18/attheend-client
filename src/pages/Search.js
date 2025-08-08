@@ -83,30 +83,66 @@ const Search = () => {
     };
 
     return (
-        <div>
-            <h2>서적 검색</h2>
-            {/* 검색 조건 표시 */}
-            {query && (
-                <div style={{ marginBottom: '16px', padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-                    <strong>검색 조건:</strong> {getSearchCategoryLabel(target)} - "{query}"
-                    <span style={{ marginLeft: '12px', color: '#666' }}>
-                        (총 {totalCount}개 결과)
-                    </span>
-                </div>
-            )}
-            {/* 검색바 */}
-            <SearchBar onSearch={handleNewSearch} />
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+            <div style={{ marginBottom: '30px' }}>
+                <h2 style={{ 
+                    fontSize: '2em', 
+                    color: '#333', 
+                    marginBottom: '20px',
+                    textAlign: 'center'
+                }}>
+                    📚 서적 검색
+                </h2>
+                
+                {/* 검색바 */}
+                <SearchBar onSearch={handleNewSearch} />
+                
+                {/* 검색 조건 표시 */}
+                {query && (
+                    <div style={{ 
+                        marginTop: '20px',
+                        padding: '15px', 
+                        backgroundColor: '#f8f9fa', 
+                        borderRadius: '8px',
+                        border: '1px solid #e9ecef'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div>
+                                <strong style={{ color: '#495057' }}>검색 조건:</strong> 
+                                <span style={{ color: '#007bff', fontWeight: 'bold' }}>
+                                    {getSearchCategoryLabel(target)} - "{query}"
+                                </span>
+                            </div>
+                            <span style={{ 
+                                color: '#6c757d', 
+                                fontSize: '0.9em',
+                                backgroundColor: '#e9ecef',
+                                padding: '4px 8px',
+                                borderRadius: '4px'
+                            }}>
+                                총 {totalCount}개 결과
+                            </span>
+                        </div>
+                    </div>
+                )}
+            </div>
+            
             {/* 검색 결과 */}
-            <BookList data={results} loading={loading} error={error} />
+            <div style={{ marginTop: '20px' }}>
+                <BookList data={results} loading={loading} error={error} />
+            </div>
+            
             {/* 페이지네이션 */}
-            {!loading && !error && (
-                <Pagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    totalCount={totalCount}
-                    onPageChange={handlePageChange}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                />
+            {!loading && !error && totalCount > 0 && (
+                <div style={{ marginTop: '30px', textAlign: 'center' }}>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        totalCount={totalCount}
+                        onPageChange={handlePageChange}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                    />
+                </div>
             )}
         </div>
     );

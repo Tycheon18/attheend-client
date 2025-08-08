@@ -9,8 +9,7 @@ const Header = () => {
         { path: '/', label: 'Home', icon: '🏠' },
         { path: '/search', label: 'Search', icon: '🔍' },
         { path: '/gallery', label: 'Gallery', icon: '📚' },
-        { path: '/new', label: 'New Review', icon: '✍️' },
-        { path: '/edit', label: 'Edit', icon: '✏️' }
+        { path: '/new', label: 'New Review', icon: '✍️' }
     ];
     
     return (
