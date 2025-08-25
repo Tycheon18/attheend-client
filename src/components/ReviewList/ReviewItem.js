@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookDispatchContext } from '../../App';
+import styles from './ReviewItem.module.css';
 
 const ReviewItem = ({ book }) => {
     const navigate = useNavigate();
@@ -26,38 +27,13 @@ const ReviewItem = ({ book }) => {
     };
 
     return (
-        <div style={{
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '20px',
-            backgroundColor: '#fff',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            cursor: 'pointer'
-        }}
-        onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-        }}
-        onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-        }}
-        onClick={handleEdit}
-        >
+        <div className={styles.reviewItem} onClick={handleEdit}>
             {/* 책 표지 이미지 */}
             {book.coverImage && (
-                <div style={{ textAlign: 'center', marginBottom: '15px' }}>
+                <div className={styles.coverImage}>
                     <img 
                         src={book.coverImage} 
                         alt={`${book.title} 표지`}
-                        style={{
-                            maxWidth: '120px',
-                            maxHeight: '160px',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                        }}
                         onError={(e) => {
                             e.target.style.display = 'none';
                         }}
@@ -66,116 +42,60 @@ const ReviewItem = ({ book }) => {
             )}
 
             {/* 책 제목 */}
-            <h4 style={{
-                margin: '0 0 8px 0',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#333',
-                lineHeight: '1.3'
-            }}>
+            <h4 className={styles.title}>
                 {book.title}
             </h4>
 
             {/* 저자 */}
             {book.authors && book.authors.length > 0 && (
-                <p style={{
-                    margin: '0 0 8px 0',
-                    fontSize: '14px',
-                    color: '#666',
-                    fontStyle: 'italic'
-                }}>
+                <p className={styles.authors}>
                     저자: {Array.isArray(book.authors) ? book.authors.join(', ') : book.authors}
                 </p>
             )}
 
             {/* 평점 */}
-            <div style={{ marginBottom: '8px' }}>
-                <span style={{ fontSize: '16px' }}>
+            <div className={styles.rating}>
+                <span className={styles.ratingStars}>
                     {'⭐'.repeat(book.rating || 0)}
                 </span>
-                <span style={{ 
-                    marginLeft: '5px', 
-                    fontSize: '14px', 
-                    color: '#666' 
-                }}>
+                <span className={styles.ratingText}>
                     ({book.rating || 0}점)
                 </span>
             </div>
 
             {/* 독후감 내용 미리보기 */}
-            <p style={{
-                margin: '8px 0',
-                fontSize: '14px',
-                color: '#555',
-                lineHeight: '1.4',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-            }}>
+            <p className={styles.content}>
                 {book.content}
             </p>
 
             {/* 읽은 날짜 */}
             {book.readingDate && (
-                <p style={{
-                    margin: '8px 0',
-                    fontSize: '12px',
-                    color: '#999'
-                }}>
+                <p className={styles.readingDate}>
                     읽은 날짜: {formatDate(book.readingDate)}
                 </p>
             )}
 
             {/* 작성/수정 날짜 */}
-            <p style={{
-                margin: '8px 0 0 0',
-                fontSize: '12px',
-                color: '#999'
-            }}>
+            <p className={styles.createdDate}>
                 {book.updatedAt ? `수정: ${formatDate(book.updatedAt)}` : `작성: ${formatDate(book.createdAt)}`}
             </p>
 
             {/* 액션 버튼들 */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: '15px',
-                gap: '10px'
-            }}>
+            <div className={styles.actionButtons}>
                 <button
+                    className={styles.editButton}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleEdit();
-                    }}
-                    style={{
-                        flex: 1,
-                        padding: '8px 12px',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
                     }}
                 >
                     ✏️ 수정
                 </button>
                 <button
+                    className={styles.deleteButton}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleDelete();
-                    }}
-                    style={{
-                        flex: 1,
-                        padding: '8px 12px',
-                        backgroundColor: '#dc3545',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '12px'
                     }}
                 >
                     🗑️ 삭제

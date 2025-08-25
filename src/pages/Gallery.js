@@ -2,6 +2,7 @@ import React, { useContext, useState, useMemo } from 'react';
 import Layout from '../components/Layout/Layout';
 import ReviewList from '../components/ReviewList/ReviewList';
 import { BookStateContext } from '../App';
+import styles from './Gallery.module.css';
 
 const Gallery = () => {
     const books = useContext(BookStateContext);
@@ -61,16 +62,12 @@ const Gallery = () => {
     }, [books, filter, sortOrder]);
 
     return (
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-            <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-                <h2 style={{ 
-                    fontSize: '2em', 
-                    color: '#333', 
-                    marginBottom: '10px'
-                }}>
+        <div className={styles.galleryContainer}>
+            <div className={styles.galleryHeader}>
+                <h2 className={styles.galleryTitle}>
                     📚 내 갤러리
                 </h2>
-                <p style={{ color: '#666', fontSize: '1.1em' }}>
+                <p className={styles.galleryDescription}>
                     작성한 독후감들을 관리하고 확인하세요
                 </p>
             </div>
@@ -80,12 +77,7 @@ const Gallery = () => {
                 <>
                     {/* 통계 카드 */}
                     {stats && (
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                            gap: '20px',
-                            marginBottom: '30px'
-                        }}>
+                        <div className={styles.statsGrid}>
                             <div style={{
                                 backgroundColor: '#007bff',
                                 color: 'white',

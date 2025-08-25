@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { BookStateContext } from '../../App';
 import ReviewItem from './ReviewItem';
+import styles from './ReviewList.module.css';
 
 const ReviewList = ({ books: externalBooks }) => {
     const contextBooks = useContext(BookStateContext);

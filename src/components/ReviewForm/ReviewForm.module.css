@@ -1,0 +1,43 @@
+.reviewForm {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.formHeader {
+    margin-bottom: 20px;
+}
+
+.formHeader h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.fieldGroup {
+    margin-bottom: 15px;
+}
+
+.fieldLabel {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.authorInput, .ratingSelect, .dateInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.authorInput::placeholder {
+    color: #999;
+}
+
+.ratingSelect {
+    cursor: pointer;
+}

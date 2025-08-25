@@ -1,0 +1,130 @@
+.emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.emptyIcon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.emptyTitle {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: normal;
+}
+
+.emptyDescription {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.emptyActions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.emptyButton {
+    padding: 12px 24px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.emptyButton.primary {
+    background-color: #007bff;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
+
+.emptyButton.primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.4);
+}
+
+.emptyButton.secondary {
+    background-color: #6c757d;
+}
+
+.emptyButton.secondary:hover {
+    background-color: #545b62;
+    transform: translateY(-2px);
+}
+
+.emptyTips {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.emptyTipsTitle {
+    margin: 0 0 10px 0;
+    color: #495057;
+    font-size: 1.1em;
+}
+
+.emptyTipsList {
+    text-align: left;
+    margin: 0;
+    padding-left: 20px;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.reviewListContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.reviewListHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.reviewListTitle {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.newReviewButton {
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.newReviewButton:hover {
+    background-color: #218838;
+}
+
+.reviewGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}

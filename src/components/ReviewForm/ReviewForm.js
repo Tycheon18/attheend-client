@@ -3,6 +3,7 @@ import ReviewTitleInput from './ReviewTitleInput';
 import ReviewContentInput from './ReviewContentInput';
 import CoverImageInput from './CoverImageInput';
 import SubmitButton from './SubmitButton';
+import styles from './ReviewForm.module.css';
 
 const ReviewForm = ({ initialValues, onSubmit }) => {
     const [formData, setFormData] = useState({
@@ -61,14 +62,14 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-            <div style={{ marginBottom: '20px' }}>
+        <form className={styles.reviewForm} onSubmit={handleSubmit}>
+            <div className={styles.formHeader}>
                 <h3>📚 독후감 작성</h3>
             </div>
 
             {/* 책 제목 입력 */}
-            <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     책 제목 *
                 </label>
                 <ReviewTitleInput 
@@ -78,8 +79,8 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
             </div>
 
             {/* 저자 입력 */}
-            <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     저자 (쉼표로 구분)
                 </label>
                 <input
@@ -87,19 +88,13 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
                     value={formData.authors}
                     onChange={(e) => handleInputChange('authors', e.target.value)}
                     placeholder="예: 김철수, 이영희"
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '16px'
-                    }}
+                    className={styles.authorInput}
                 />
             </div>
 
             {/* 독후감 내용 입력 */}
-            <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     독후감 내용 *
                 </label>
                 <ReviewContentInput 
@@ -109,8 +104,8 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
             </div>
 
             {/* 표지 이미지 입력 */}
-            <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     표지 이미지 URL
                 </label>
                 <CoverImageInput 
@@ -120,19 +115,14 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
             </div>
 
             {/* 평점 */}
-            <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     평점
                 </label>
                 <select
                     value={formData.rating}
                     onChange={(e) => handleInputChange('rating', parseInt(e.target.value))}
-                    style={{
-                        padding: '10px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '16px'
-                    }}
+                    className={styles.ratingSelect}
                 >
                     {[5, 4, 3, 2, 1].map(rating => (
                         <option key={rating} value={rating}>
@@ -143,20 +133,15 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
             </div>
 
             {/* 읽은 날짜 */}
-            <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+            <div className={styles.fieldGroup}>
+                <label className={styles.fieldLabel}>
                     읽은 날짜
                 </label>
                 <input
                     type="date"
                     value={formData.readingDate}
                     onChange={(e) => handleInputChange('readingDate', e.target.value)}
-                    style={{
-                        padding: '10px',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '16px'
-                    }}
+                    className={styles.dateInput}
                 />
             </div>
 
