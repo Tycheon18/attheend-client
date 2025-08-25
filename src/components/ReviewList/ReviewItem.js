@@ -185,4 +185,4 @@ const ReviewItem = ({ book }) => {
     );
 };
 
-export default ReviewItem;
+export default React.memo(ReviewItem);

@@ -52,7 +52,7 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
         const submitData = {
             ...formData,
             authors: formData.authors.split(',').map(author => author.trim()).filter(author => author),
-            id: initialValues?.id || Date.now(),
+            id: initialValues?.id, // New.js/Edit.js에서 ID 설정
             createdAt: initialValues?.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };

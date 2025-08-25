@@ -1,15 +1,21 @@
 import React, { useContext, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import ReviewForm from '../components/ReviewForm/ReviewForm';
-import { BookDispatchContext } from '../App';
+import { BookDispatchContext, BookIdContext } from '../App';
 import { useNavigate } from 'react-router-dom';
 
 const New = () => {
     const dispatch = useContext(BookDispatchContext);
+    const idRef = useContext(BookIdContext);
     const navigate = useNavigate();
 
     const handleCreate = (data) => {
-        dispatch({type: 'CREATE' , data});
+        const newData = {
+            ...data,
+            id: idRef.current
+        };
+        dispatch({type: 'CREATE' , data: newData});
+        idRef.current += 1;
         // 임시 데이터 삭제
         sessionStorage.removeItem('tempBookData');
         navigate('/gallery');
