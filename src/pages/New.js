@@ -3,11 +3,13 @@ import Layout from '../components/Layout/Layout';
 import ReviewForm from '../components/ReviewForm/ReviewForm';
 import { BookDispatchContext, BookIdContext } from '../App';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../components/Common/Toast';
 
 const New = () => {
     const dispatch = useContext(BookDispatchContext);
     const idRef = useContext(BookIdContext);
     const navigate = useNavigate();
+    const { addToast } = useToast();
 
     const handleCreate = (data) => {
         const newData = {
@@ -18,6 +20,7 @@ const New = () => {
         idRef.current += 1;
         // 임시 데이터 삭제
         sessionStorage.removeItem('tempBookData');
+        addToast('독후감이 성공적으로 저장되었습니다!', 'success');
         navigate('/gallery');
     }
 

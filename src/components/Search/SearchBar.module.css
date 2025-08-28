@@ -1,89 +1,76 @@
 .searchContainer {
-    position: relative;
     margin: 2rem 0;
     display: flex;
-    justify-content: flex-end;
-    padding-right: 2rem;
-}
-
-.backgroundShape {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 120px;
-    background: linear-gradient(135deg, #a8e6cf 0%, #7fcdcd 100%);
-    border-radius: 0 0 0 30px;
-    z-index: 0;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 8px 32px rgba(168, 230, 207, 0.3);
+    justify-content: center;
+    padding: 0 1rem;
 }
 
 .Bar {
     display: flex;
-    flex-basis: 150px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 15px;
-    justify-content: space-around;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     align-items: center;
-    position: relative;
-    z-index: 2;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #fff;
+    border-radius: 16px;
+    padding: 8px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8ecef;
+    transition: all 0.2s ease;
+}
+
+.Bar:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: #d1d9e0;
 }
 
 .category_wrapper {
-    border-right: 2px solid #dde2f1;
-    padding-right: 20px;
-    height: 50px;
+    margin-right: 12px;
+    padding-right: 12px;
+    border-right: 1px solid #e8ecef;
 }
 
 .category_wrapper select {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    background: transparent;
     border: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150px;
-    position: relative;
-    cursor: pointer;
     outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.category_wrapper select:hover {
+    background-color: #f8f9fa;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .searchContainer {
         margin: 1rem 0;
-        justify-content: center;
-        padding-right: 0;
-    }
-    
-    .backgroundShape {
-        width: 300px;
-        height: 100px;
-        border-radius: 0 0 0 20px;
+        padding: 0 0.5rem;
     }
     
     .Bar {
         flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-        margin: 0 1rem;
+        padding: 16px;
+        gap: 12px;
     }
     
     .category_wrapper {
         border-right: none;
-        border-bottom: 2px solid #dde2f1;
-        padding-right: 0;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
+        border-bottom: 1px solid #e8ecef;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        margin-right: 0;
+        width: 100%;
+        text-align: center;
     }
     
     .category_wrapper select {
-        width: 100%;
-        text-align: center;
+        width: auto;
+        min-width: 120px;
     }
 }

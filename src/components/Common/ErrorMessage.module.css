@@ -1,0 +1,93 @@
+.errorContainer {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.errorContainer.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.errorContainer.warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.errorContainer.info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.errorIcon {
+    font-size: 24px;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.errorContent {
+    flex: 1;
+    text-align: left;
+}
+
+.errorTitle {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.errorMessage {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0.8;
+}
+
+.retryButton {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: inherit;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.retryButton:hover {
+    background: currentColor;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* 인라인 에러 (작은 크기) */
+.errorContainer.inline {
+    padding: 12px;
+    margin: 8px 0;
+    max-width: none;
+}
+
+.errorContainer.inline .errorIcon {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.errorContainer.inline .errorTitle {
+    font-size: 14px;
+}
+
+.errorContainer.inline .errorMessage {
+    font-size: 13px;
+    margin-bottom: 8px;
+}

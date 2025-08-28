@@ -1,4 +1,5 @@
 import styles from './SearchButton.module.css';
+import LoadingSpinner from '../Common/LoadingSpinner';
 
 const SearchButton = ({ onClick, disabled }) => {
     return (
@@ -7,7 +8,11 @@ const SearchButton = ({ onClick, disabled }) => {
                 onClick={onClick}
                 disabled={disabled}
             >
-                {disabled ? "검색중..." : "검색"}
+                {disabled ? (
+                    <LoadingSpinner size="small" className={styles.inlineSpinner} />
+                ) : (
+                    "🔍 검색"
+                )}
             </button>
         </div>
     );

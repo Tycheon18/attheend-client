@@ -25,7 +25,9 @@ const SearchBar = ({ onSearch }) => {
         setQuery(e.target.value);
     }
 
-    const handleClick = async () => {
+    const handleSearch = async () => {
+        if (!query.trim()) return;
+        
         setLoading(true);
         setError(null);
 
@@ -35,6 +37,16 @@ const SearchBar = ({ onSearch }) => {
             setError(err.message);
         } finally {
             setLoading(false);
+        }
+    }
+
+    const handleClick = () => {
+        handleSearch();
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
         }
     }
 
@@ -51,7 +63,7 @@ const SearchBar = ({ onSearch }) => {
                         ))}
                     </select>
                 </div>    
-                <SearchInput value={query} onChange={onChangeQuery} />
+                <SearchInput value={query} onChange={onChangeQuery} onKeyPress={handleKeyPress} />
                 <SearchButton onClick={handleClick} disabled={loading} />
             </div>
         </div>

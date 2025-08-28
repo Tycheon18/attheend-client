@@ -7,6 +7,8 @@ import Search from './pages/Search';
 import New from './pages/New';
 import Edit from './pages/Edit';
 import Gallery from './pages/Gallery';
+import LoadingSpinner from './components/Common/LoadingSpinner';
+import { ToastProvider } from './components/Common/Toast';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -92,31 +94,37 @@ function App() {
   }, [])
 
   if (!isDataLoaded) {
-    return <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '100vh',
-      fontSize: '18px'
-    }}>📚 독후감 데이터를 불러오는 중입니다...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        backgroundColor: '#f8f9fa'
+      }}>
+        <LoadingSpinner size="large" text="독후감 데이터를 불러오는 중입니다..." />
+      </div>
+    );
   }
 
   return (
-    <BookStateContext.Provider value={books}>
-      <BookDispatchContext.Provider value={dispatch}>
-        <BookIdContext.Provider value={idRef}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Layout><Main /></Layout>} />
-              <Route path="/search" element={<Layout><Search /></Layout>} />
-              <Route path="/new" element={<Layout><New /></Layout>} />
-              <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
-              <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
-            </Routes>
-          </BrowserRouter>
-        </BookIdContext.Provider>
-      </BookDispatchContext.Provider>
-    </BookStateContext.Provider>
+    <ToastProvider>
+      <BookStateContext.Provider value={books}>
+        <BookDispatchContext.Provider value={dispatch}>
+          <BookIdContext.Provider value={idRef}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Layout><Main /></Layout>} />
+                <Route path="/search" element={<Layout><Search /></Layout>} />
+                <Route path="/new" element={<Layout><New /></Layout>} />
+                <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
+                <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
+              </Routes>
+            </BrowserRouter>
+          </BookIdContext.Provider>
+        </BookDispatchContext.Provider>
+      </BookStateContext.Provider>
+    </ToastProvider>
   );
 }
 
