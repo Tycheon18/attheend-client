@@ -3,17 +3,23 @@ import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import BookList from '../components/List/BookList';
 import SearchBar from '../components/Search/SearchBar';
+import SortOptions from '../components/Search/SortOptions';
+import RecentSearches from '../components/Search/RecentSearches';
 import Pagination from '../components/Pagination/Pagination';
+import { sortBookResults } from '../utils/sortUtils';
+import { addRecentSearch } from '../utils/recentSearchUtils';
 
 const ITEMS_PER_PAGE = 10;
 
 const Search = () => {
     const [searchParams] = useSearchParams();
     const [results, setResults] = useState([]);
+    const [originalResults, setOriginalResults] = useState([]); // API 원본 결과 저장
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [page, setPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
+    const [sortBy, setSortBy] = useState('relevance');
 
     const query = searchParams.get('query');
     const target = searchParams.get('target') || 'all';
@@ -44,8 +50,14 @@ const Search = () => {
 
             if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
             const data = await res.json();
-            setResults(data.documents);
+            setOriginalResults(data.documents);
+            setResults(sortBookResults(data.documents, sortBy));
             setTotalCount(data.meta?.total_count || 0);
+            
+            // 검색어를 최근 검색어에 추가 (페이지 1일 때만)
+            if (page === 1 && query) {
+                addRecentSearch(query, target);
+            }
         } catch (err) {
             setError(err.message);
         } finally {
@@ -56,13 +68,26 @@ const Search = () => {
     // 새로운 검색을 위한 함수 (SearchBar에서 사용)
     const handleNewSearch = async ({ category, query }) => {
         if (!query?.trim()) return;
-        // 검색 시 page를 1로 초기화
+        // 검색 시 page를 1로 초기화하고 정렬을 관련도순으로 리셋
         setPage(1);
+        setSortBy('relevance');
         // URL을 업데이트하여 검색 실행
         const params = new URLSearchParams({ query });
         if (category !== "all") params.append("target", category);
         window.history.pushState({}, '', `/search?${params.toString()}`);
         window.dispatchEvent(new PopStateEvent('popstate'));
+    };
+    
+    // 정렬 변경 핸들러
+    const handleSortChange = (newSortBy) => {
+        setSortBy(newSortBy);
+        // 현재 결과를 새로운 기준으로 정렬
+        setResults(sortBookResults(originalResults, newSortBy));
+    };
+    
+    // 최근 검색어에서 검색 선택 핸들러
+    const handleRecentSearchSelect = ({ category, query }) => {
+        handleNewSearch({ category, query });
     };
 
     const getSearchCategoryLabel = (target) => {
@@ -97,6 +122,12 @@ const Search = () => {
                 {/* 검색바 */}
                 <SearchBar onSearch={handleNewSearch} />
                 
+                {/* 최근 검색어 */}
+                <RecentSearches 
+                    onSearchSelect={handleRecentSearchSelect}
+                    show={true}
+                />
+                
                 {/* 검색 조건 표시 */}
                 {query && (
                     <div style={{ 
@@ -113,17 +144,17 @@ const Search = () => {
                                     {getSearchCategoryLabel(target)} - "{query}"
                                 </span>
                             </div>
-                            <span style={{ 
-                                color: '#6c757d', 
-                                fontSize: '0.9em',
-                                backgroundColor: '#e9ecef',
-                                padding: '4px 8px',
-                                borderRadius: '4px'
-                            }}>
-                                총 {totalCount}개 결과
-                            </span>
                         </div>
                     </div>
+                )}
+                
+                {/* 정렬 옵션 */}
+                {query && !loading && !error && (
+                    <SortOptions
+                        sortBy={sortBy}
+                        onSortChange={handleSortChange}
+                        resultsCount={totalCount}
+                    />
                 )}
             </div>
             

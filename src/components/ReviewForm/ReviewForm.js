@@ -14,6 +14,8 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
         rating: 5,
         readingDate: new Date().toISOString().split('T')[0]
     });
+    
+    const [showValidation, setShowValidation] = useState(false);
 
     // 초기값이 있으면 폼 데이터에 설정
     useEffect(() => {
@@ -39,13 +41,13 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
+        // 실시간 검증 활성화
+        setShowValidation(true);
+        
         // 폼 데이터 검증
-        if (!formData.title.trim()) {
-            alert('책 제목을 입력해주세요.');
-            return;
-        }
-        if (!formData.content.trim()) {
-            alert('독후감 내용을 입력해주세요.');
+        if (!formData.title.trim() || !formData.content.trim()) {
+            // 검증 실패 시 스크롤을 맨 위로
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
@@ -75,6 +77,7 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
                 <ReviewTitleInput 
                     value={formData.title}
                     onChange={(value) => handleInputChange('title', value)}
+                    showValidation={showValidation}
                 />
             </div>
 
@@ -100,6 +103,7 @@ const ReviewForm = ({ initialValues, onSubmit }) => {
                 <ReviewContentInput 
                     value={formData.content}
                     onChange={(value) => handleInputChange('content', value)}
+                    showValidation={showValidation}
                 />
             </div>
 
