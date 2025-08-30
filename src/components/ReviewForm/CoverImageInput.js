@@ -15,25 +15,49 @@ const CoverImageInput = ({ value, onChange }) => {
     };
 
     const isImageUrl = (url) => {
-        return /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
+        // 카카오 API나 기타 책 표지 이미지 URL 패턴 허용
+        // 1. 일반적인 이미지 확장자 체크
+        if (/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url)) {
+            return true;
+        }
+        
+        // 2. 카카오 API URL 패턴 (search.daum.net, img1.daumcdn.net 등)
+        if (/^https?:\/\/(search\.daum\.net|img\d*\.daumcdn\.net|t\d*\.daumcdn\.net)/i.test(url)) {
+            return true;
+        }
+        
+        // 3. 기타 일반적인 이미지 호스팅 URL 패턴
+        if (/^https?:\/\/(.*\.(amazonaws\.com|googleusercontent\.com|imgur\.com|cloudinary\.com))/i.test(url)) {
+            return true;
+        }
+        
+        // 4. URL에 'image', 'cover', 'thumbnail' 등 이미지 관련 키워드가 포함된 경우
+        if (/\/(image|img|cover|thumbnail|photo|pic)/i.test(url)) {
+            return true;
+        }
+        
+        return false;
     };
 
     const validateImageUrl = async (url) => {
-        if (!url.trim()) {
+        // 안전장치: 유효하지 않은 입력 체크
+        if (!url || typeof url !== 'string' || !url.trim()) {
             setValidationState('none');
             setValidationMessage('');
             return;
         }
 
-        if (!isValidUrl(url)) {
+        const trimmedUrl = url.trim();
+
+        if (!isValidUrl(trimmedUrl)) {
             setValidationState('invalid');
             setValidationMessage('올바른 URL 형식이 아닙니다');
             return;
         }
 
-        if (!isImageUrl(url)) {
+        if (!isImageUrl(trimmedUrl)) {
             setValidationState('invalid');
-            setValidationMessage('이미지 파일 URL이 아닙니다 (jpg, png, gif, webp, svg만 지원)');
+            setValidationMessage('이미지 URL 형식이 인식되지 않습니다. 이미지 파일이나 책 표지 URL인지 확인해주세요.');
             return;
         }
 
@@ -42,48 +66,81 @@ const CoverImageInput = ({ value, onChange }) => {
 
         try {
             const img = new Image();
+            
+            // CORS 문제 방지를 위해 crossOrigin 설정
+            img.crossOrigin = 'anonymous';
+            
+            // 타임아웃 설정 (10초로 늘림 - 외부 API 응답 고려)
+            const timeoutId = setTimeout(() => {
+                setValidationState('warning');
+                setValidationMessage('⏰ 이미지 로딩이 지연되고 있지만 사용 가능할 수 있습니다');
+            }, 10000);
+            
             img.onload = () => {
+                clearTimeout(timeoutId);
                 setValidationState('valid');
                 setValidationMessage('✅ 유효한 이미지입니다');
             };
+            
             img.onerror = () => {
-                setValidationState('invalid');
-                setValidationMessage('이미지를 불러올 수 없습니다');
+                clearTimeout(timeoutId);
+                // HTTP URL의 경우 HTTPS 사이트에서 로딩 실패할 수 있으므로 경고로 처리
+                if (trimmedUrl.startsWith('http://')) {
+                    setValidationState('warning');
+                    setValidationMessage('⚠️ HTTP 이미지는 일부 브라우저에서 로딩되지 않을 수 있습니다');
+                } else {
+                    setValidationState('invalid');
+                    setValidationMessage('이미지를 불러올 수 없습니다');
+                }
             };
-            img.src = url;
-        } catch {
-            setValidationState('invalid');
-            setValidationMessage('이미지 검증 중 오류가 발생했습니다');
+            
+            img.src = trimmedUrl;
+        } catch (error) {
+            console.warn('Image validation error:', error);
+            setValidationState('warning');
+            setValidationMessage('⚠️ 이미지 검증에 실패했지만 사용 가능할 수 있습니다');
         }
     };
 
     useEffect(() => {
-        if (value) {
-            const timer = setTimeout(() => {
-                validateImageUrl(value);
-            }, 500); // 0.5초 디바운싱
-            return () => clearTimeout(timer);
-        } else {
+        // 컴포넌트 마운트 시 즉시 상태 초기화
+        if (!value || !value.trim()) {
             setValidationState('none');
             setValidationMessage('');
+            return;
         }
+        
+        // 유효한 값이 있을 때만 검증 실행
+        const timer = setTimeout(() => {
+            try {
+                validateImageUrl(value);
+            } catch (error) {
+                console.warn('Image validation error:', error);
+                setValidationState('none');
+                setValidationMessage('');
+            }
+        }, 500); // 0.5초 디바운싱
+        
+        return () => clearTimeout(timer);
     }, [value]);
 
     const getBorderColor = () => {
         switch (validationState) {
-            case 'valid': return '#28a745';
-            case 'invalid': return '#dc3545';
-            case 'validating': return '#007bff';
-            default: return '#ddd';
+            case 'valid': return 'var(--color-success, #28a745)';
+            case 'invalid': return 'var(--color-error, #dc3545)';
+            case 'warning': return 'var(--color-warning, #ffc107)';
+            case 'validating': return 'var(--color-primary, #007bff)';
+            default: return 'var(--color-input-border, #ddd)';
         }
     };
 
     const getValidationColor = () => {
         switch (validationState) {
-            case 'valid': return '#28a745';
-            case 'invalid': return '#dc3545';
-            case 'validating': return '#007bff';
-            default: return '#666';
+            case 'valid': return 'var(--color-success, #28a745)';
+            case 'invalid': return 'var(--color-error, #dc3545)';
+            case 'warning': return 'var(--color-warning, #ffc107)';
+            case 'validating': return 'var(--color-primary, #007bff)';
+            default: return 'var(--color-text-secondary, #666)';
         }
     };
 
@@ -100,7 +157,8 @@ const CoverImageInput = ({ value, onChange }) => {
                     border: `2px solid ${getBorderColor()}`,
                     borderRadius: '4px',
                     fontSize: '16px',
-                    backgroundColor: '#fff',
+                    backgroundColor: 'var(--color-input-background, #fff)',
+                    color: 'var(--color-text, #333)',
                     transition: 'border-color 0.2s ease'
                 }}
             />
@@ -130,7 +188,7 @@ const CoverImageInput = ({ value, onChange }) => {
             )}
 
             {/* 이미지 미리보기 */}
-            {value && validationState === 'valid' && (
+            {value && (validationState === 'valid' || validationState === 'warning') && (
                 <div style={{ marginTop: '15px' }}>
                     <ImageWithFallback
                         src={value}

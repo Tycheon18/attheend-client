@@ -4,29 +4,29 @@
     padding: 20px;
     border-radius: 8px;
     margin: 16px 0;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: var(--color-surface, #f8f9fa);
+    border: 1px solid var(--color-border, #dee2e6);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .errorContainer.error {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
+    background-color: var(--color-error-surface, #f8d7da);
+    border-color: var(--color-error-border, #f5c6cb);
+    color: var(--color-error-text, #721c24);
 }
 
 .errorContainer.warning {
-    background-color: #fff3cd;
-    border-color: #ffeaa7;
-    color: #856404;
+    background-color: var(--color-warning-surface, #fff3cd);
+    border-color: var(--color-warning-border, #ffeaa7);
+    color: var(--color-warning-text, #856404);
 }
 
 .errorContainer.info {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    color: #0c5460;
+    background-color: var(--color-info-surface, #d1ecf1);
+    border-color: var(--color-info-border, #bee5eb);
+    color: var(--color-info-text, #0c5460);
 }
 
 .errorIcon {
@@ -67,7 +67,7 @@
 
 .retryButton:hover {
     background: currentColor;
-    color: white;
+    color: var(--color-on-primary, white);
     transform: translateY(-1px);
 }
 

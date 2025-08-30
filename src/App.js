@@ -9,6 +9,7 @@ import Edit from './pages/Edit';
 import Gallery from './pages/Gallery';
 import LoadingSpinner from './components/Common/LoadingSpinner';
 import { ToastProvider } from './components/Common/Toast';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 export const BookStateContext = React.createContext();
 export const BookDispatchContext = React.createContext();
@@ -108,23 +109,25 @@ function App() {
   }
 
   return (
-    <ToastProvider>
-      <BookStateContext.Provider value={books}>
-        <BookDispatchContext.Provider value={dispatch}>
-          <BookIdContext.Provider value={idRef}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Layout><Main /></Layout>} />
-                <Route path="/search" element={<Layout><Search /></Layout>} />
-                <Route path="/new" element={<Layout><New /></Layout>} />
-                <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
-                <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
-              </Routes>
-            </BrowserRouter>
-          </BookIdContext.Provider>
-        </BookDispatchContext.Provider>
-      </BookStateContext.Provider>
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <BookStateContext.Provider value={books}>
+          <BookDispatchContext.Provider value={dispatch}>
+            <BookIdContext.Provider value={idRef}>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Layout><Main /></Layout>} />
+                  <Route path="/search" element={<Layout><Search /></Layout>} />
+                  <Route path="/new" element={<Layout><New /></Layout>} />
+                  <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />
+                  <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
+                </Routes>
+              </BrowserRouter>
+            </BookIdContext.Provider>
+          </BookDispatchContext.Provider>
+        </BookStateContext.Provider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 

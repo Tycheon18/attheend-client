@@ -17,17 +17,17 @@ const ReviewTitleInput = ({ value, onChange, showValidation = false }) => {
     
     const getBorderColor = () => {
         switch (validationState) {
-            case 'valid': return '#28a745';
-            case 'invalid': return '#dc3545';
-            default: return '#ddd';
+            case 'valid': return 'var(--color-success, #28a745)';
+            case 'invalid': return 'var(--color-error, #dc3545)';
+            default: return 'var(--color-input-border, #ddd)';
         }
     };
     
     const getValidationColor = () => {
         switch (validationState) {
-            case 'valid': return '#28a745';
-            case 'invalid': return '#dc3545';
-            default: return '#666';
+            case 'valid': return 'var(--color-success, #28a745)';
+            case 'invalid': return 'var(--color-error, #dc3545)';
+            default: return 'var(--color-text-secondary, #666)';
         }
     };
     
@@ -49,7 +49,8 @@ const ReviewTitleInput = ({ value, onChange, showValidation = false }) => {
                     border: `2px solid ${getBorderColor()}`,
                     borderRadius: '4px',
                     fontSize: '16px',
-                    backgroundColor: '#fff',
+                    backgroundColor: 'var(--color-input-background, #fff)',
+                    color: 'var(--color-text, #333)',
                     transition: 'border-color 0.2s ease'
                 }}
             />

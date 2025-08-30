@@ -1,9 +1,10 @@
 .recentSearchesContainer {
     margin-bottom: 20px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--color-border, #e9ecef);
     border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-card-background, #fff);
+    box-shadow: var(--color-card-shadow, 0 1px 3px rgba(0, 0, 0, 0.1));
+    transition: all 0.3s ease;
 }
 
 .recentSearchesHeader {
@@ -11,7 +12,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background-color: #f8f9fa;
+    background-color: var(--color-surface, #f8f9fa);
     border-radius: 8px 8px 0 0;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -19,7 +20,7 @@
 }
 
 .recentSearchesHeader:hover {
-    background-color: #e9ecef;
+    background-color: var(--color-surface-variant, #e9ecef);
 }
 
 .headerContent {
@@ -34,15 +35,17 @@
 
 .headerText {
     font-weight: 500;
-    color: #495057;
+    color: var(--color-text, #495057);
+    transition: color 0.3s ease;
 }
 
 .searchCount {
     font-size: 12px;
-    color: #6c757d;
-    background-color: #e9ecef;
+    color: var(--color-text-secondary, #6c757d);
+    background-color: var(--color-surface-variant, #e9ecef);
     padding: 2px 6px;
     border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 .dropdownIcon {

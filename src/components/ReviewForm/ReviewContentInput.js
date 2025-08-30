@@ -19,20 +19,20 @@ const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
     }, [value, isTouched, showValidation, isValid]);
     
     const getCharacterCountColor = () => {
-        if (currentLength >= MAX_LENGTH) return '#dc3545'; // Red when at limit
-        if (currentLength >= WARNING_THRESHOLD) return '#ffc107'; // Yellow when approaching limit
-        return '#666'; // Gray for normal state
+        if (currentLength >= MAX_LENGTH) return 'var(--color-error, #dc3545)'; // Red when at limit
+        if (currentLength >= WARNING_THRESHOLD) return 'var(--color-warning, #ffc107)'; // Yellow when approaching limit
+        return 'var(--color-text-secondary, #666)'; // Gray for normal state
     };
     
     const getBorderColor = () => {
         // Validation state takes priority over character count colors
-        if (validationState === 'valid' && currentLength < WARNING_THRESHOLD) return '#28a745';
-        if (validationState === 'invalid') return '#dc3545';
+        if (validationState === 'valid' && currentLength < WARNING_THRESHOLD) return 'var(--color-success, #28a745)';
+        if (validationState === 'invalid') return 'var(--color-error, #dc3545)';
         
         // Character count based colors
-        if (currentLength >= MAX_LENGTH) return '#dc3545';
-        if (currentLength >= WARNING_THRESHOLD) return '#ffc107';
-        return '#ddd';
+        if (currentLength >= MAX_LENGTH) return 'var(--color-error, #dc3545)';
+        if (currentLength >= WARNING_THRESHOLD) return 'var(--color-warning, #ffc107)';
+        return 'var(--color-input-border, #ddd)';
     };
     
     const handleBlur = () => {
@@ -63,7 +63,8 @@ const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
                     fontFamily: 'inherit',
                     resize: 'vertical',
                     minHeight: '200px',
-                    backgroundColor: '#fff',
+                    backgroundColor: 'var(--color-input-background, #fff)',
+                    color: 'var(--color-text, #333)',
                     transition: 'border-color 0.2s ease'
                 }}
             />
@@ -73,7 +74,7 @@ const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
                 <div style={{
                     marginTop: '6px',
                     fontSize: '14px',
-                    color: validationState === 'valid' ? '#28a745' : '#dc3545',
+                    color: validationState === 'valid' ? 'var(--color-success, #28a745)' : 'var(--color-error, #dc3545)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px'
@@ -102,7 +103,7 @@ const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
                 fontSize: '14px'
             }}>
                 <div style={{
-                    color: currentLength >= WARNING_THRESHOLD ? getCharacterCountColor() : '#666'
+                    color: currentLength >= WARNING_THRESHOLD ? getCharacterCountColor() : 'var(--color-text-secondary, #666)'
                 }}>
                     {currentLength >= WARNING_THRESHOLD && (
                         <span>

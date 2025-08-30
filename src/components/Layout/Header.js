@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from './Header.module.css';
+import ThemeToggle from '../Common/ThemeToggle';
 
 const Header = () => {
     const location = useLocation();
@@ -35,7 +36,8 @@ const Header = () => {
                     ))}
                 </nav>
                 
-                <div className={styles.searchSection}>
+                <div className={styles.actionSection}>
+                    <ThemeToggle className={styles.themeToggle} />
                     <Link to="/search" className={styles.searchButton}>
                         <span className={styles.searchIcon}>🔍</span>
                         <span>Search Books</span>

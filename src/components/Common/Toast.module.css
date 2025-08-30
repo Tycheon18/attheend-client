@@ -17,7 +17,7 @@
     max-width: 500px;
     padding: 16px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--color-shadow-toast, 0 4px 12px rgba(0, 0, 0, 0.15));
     font-size: 14px;
     font-weight: 500;
     pointer-events: auto;
@@ -37,27 +37,27 @@
 }
 
 .toast.success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
+    background-color: var(--color-success-surface, #d4edda);
+    border: 1px solid var(--color-success-border, #c3e6cb);
+    color: var(--color-success-text, #155724);
 }
 
 .toast.error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+    background-color: var(--color-error-surface, #f8d7da);
+    border: 1px solid var(--color-error-border, #f5c6cb);
+    color: var(--color-error-text, #721c24);
 }
 
 .toast.warning {
-    background-color: #fff3cd;
-    border: 1px solid #ffeaa7;
-    color: #856404;
+    background-color: var(--color-warning-surface, #fff3cd);
+    border: 1px solid var(--color-warning-border, #ffeaa7);
+    color: var(--color-warning-text, #856404);
 }
 
 .toast.info {
-    background-color: #d1ecf1;
-    border: 1px solid #bee5eb;
-    color: #0c5460;
+    background-color: var(--color-info-surface, #d1ecf1);
+    border: 1px solid var(--color-info-border, #bee5eb);
+    color: var(--color-info-text, #0c5460);
 }
 
 .toastContent {
@@ -97,7 +97,7 @@
 
 .closeButton:hover {
     opacity: 1;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--color-hover-overlay, rgba(0, 0, 0, 0.1));
 }
 
 /* 모바일 대응 */
