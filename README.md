@@ -1,70 +1,146 @@
-# Getting Started with Create React App
+# 📚 At the End of the Shelf - Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web client for managing book reviews with search functionality, powered by Kakao Book API.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+### 🔍 Book Search
+- Real-time book search using Kakao Book API
+- Search by category (All / Title / Author / Publisher)
+- Debounced search (800ms) to minimize API calls
+- Sort results by relevance, title, author, or publication date
+- Recent search history (up to 10 searches)
 
-### `npm start`
+### ✍️ Review Management
+- Create, edit, and delete book reviews
+- Record book information (title, author, cover image)
+- Rate books (1-5 stars) and track reading dates
+- Real-time form validation with visual feedback
+- Character limit (2,000 characters) with counter display
+- Image URL validation with preview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📖 Gallery View
+- Display all written reviews
+- Statistics dashboard (total reviews, average rating, 5-star books, recent 30 days)
+- Filter by rating (All / 4+ stars)
+- Sort by newest, oldest, or rating
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🎨 User Experience
+- Light/Dark theme toggle
+- Toast notification system
+- Loading spinners and error messages
+- Image fallback handling
+- Responsive design
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React** 19.1 - UI library
+- **React Router** 7.6 - Client-side routing
+- **Kakao Book API** - Book search functionality
+- **localStorage** - Data persistence
+- **CSS Modules** - Scoped styling
 
-### `npm run build`
+## 📦 Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone https://github.com/Tycheon18/attheend-client.git
+cd attheend-client
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create `.env` file from `.env.example`:
+```bash
+cp .env.example .env
+```
 
-### `npm run eject`
+4. Get your Kakao REST API key from [Kakao Developers](https://developers.kakao.com/) and add it to `.env`:
+```
+REACT_APP_KAKAO_API_KEY=your_kakao_rest_api_key_here
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Start the development server:
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app will open at [http://localhost:3000](http://localhost:3000)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📁 Project Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+├── api/               # API utilities
+├── components/
+│   ├── Common/        # Reusable components (Toast, Loading, Error, ThemeToggle)
+│   ├── Layout/        # Layout components (Header, Footer, Layout)
+│   ├── List/          # Book search results list
+│   ├── Pagination/    # Pagination component
+│   ├── ReviewForm/    # Review creation form
+│   ├── ReviewList/    # Review list display
+│   └── Search/        # Search-related components
+├── contexts/          # React contexts (ThemeContext)
+├── pages/             # Page components
+│   ├── Main.js        # Home page
+│   ├── Search.js      # Search page
+│   ├── New.js         # Create review
+│   ├── Edit.js        # Edit review
+│   └── Gallery.js     # Gallery view
+├── utils/             # Utility functions
+│   ├── recentSearchUtils.js  # Recent search management
+│   └── sortUtils.js          # Sorting logic
+└── App.js             # Main app component
+```
 
-## Learn More
+## 🔑 Key Features
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### State Management
+- React Context API for global state
+- useReducer hook for CRUD operations
+- localStorage synchronization
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Routing
+```
+/ → Main page
+/search → Book search
+/new → Create review
+/edit/:id → Edit review
+/gallery → Review gallery
+```
 
-### Code Splitting
+### Data Flow
+```
+User Action → dispatch(action) 
+  → reducer(state, action) 
+  → localStorage sync 
+  → new state → UI update
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🎯 Available Scripts
 
-### Analyzing the Bundle Size
+- `npm start` - Run development server
+- `npm build` - Build for production
+- `npm test` - Run tests
+- `npm eject` - Eject from Create React App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🔗 Related Projects
 
-### Making a Progressive Web App
+- [attheend-server](https://github.com/Tycheon18/attheend-server) - Backend API server (Node.js/Express)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📄 License
 
-### Advanced Configuration
+This project is open source and available under the [MIT License](LICENSE).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 👤 Author
 
-### Deployment
+**Tycheon18**
+- GitHub: [@Tycheon18](https://github.com/Tycheon18)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🙏 Acknowledgments
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Kakao Developers](https://developers.kakao.com/) - Book search API
+- [Create React App](https://create-react-app.dev/) - React project setup
