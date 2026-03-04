@@ -1,44 +1,34 @@
 import React from 'react';
-import styles from './SortOptions.module.css';
 
-const sortOptionsList = [
-    { value: 'relevance', label: '관련도순', icon: '🎯' },
-    { value: 'title', label: '제목순', icon: '📖' },
-    { value: 'authors', label: '저자순', icon: '👥' },
-    { value: 'publisher', label: '출판사순', icon: '🏢' },
-    { value: 'datetime', label: '출간일순', icon: '📅' }
+const SORT_OPTIONS = [
+    { value: 'relevance', label: '관련도순' },
+    { value: 'title',     label: '제목순'   },
+    { value: 'authors',   label: '저자순'   },
+    { value: 'publisher', label: '출판사순' },
+    { value: 'datetime',  label: '출간일순' },
 ];
 
 const SortOptions = ({ sortBy, onSortChange, resultsCount = 0 }) => {
-    const handleSortChange = (e) => {
-        onSortChange(e.target.value);
-    };
-
     if (resultsCount === 0) return null;
 
     return (
-        <div className={styles.sortContainer}>
-            <div className={styles.sortWrapper}>
-                <span className={styles.sortLabel}>
-                    🔄 정렬:
-                </span>
-                <select 
-                    value={sortBy} 
-                    onChange={handleSortChange}
-                    className={styles.sortSelect}
-                >
-                    {sortOptionsList.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.icon} {option.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
-            
-            <div className={styles.resultInfo}>
-                <span className={styles.resultCount}>
-                    {resultsCount.toLocaleString()}개 결과
-                </span>
+        <div className="flex items-center justify-between mt-4 mb-2 py-3 border-b border-linen-300">
+            {/* 정렬 탭 */}
+            <div className="flex items-center gap-1 flex-wrap">
+                <span className="text-xs text-charcoal-500 mr-1">정렬</span>
+                {SORT_OPTIONS.map((opt) => (
+                    <button
+                        key={opt.value}
+                        onClick={() => onSortChange(opt.value)}
+                        className={`text-xs px-3 py-1.5 rounded-full transition-colors duration-150 font-medium ${
+                            sortBy === opt.value
+                                ? 'bg-ink-500 text-white'
+                                : 'bg-linen-100 text-charcoal-700 hover:bg-linen-200'
+                        }`}
+                    >
+                        {opt.label}
+                    </button>
+                ))}
             </div>
         </div>
     );

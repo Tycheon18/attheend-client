@@ -8,24 +8,11 @@
 
 .main {
     flex: 1;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 0;
+    /* padding 없음 — 각 페이지가 자체 px/py 직접 제어 */
     width: 100%;
     position: relative;
-}
-
-/* A Working Library 스타일의 미니멀한 배경 */
-.main::before {
-    content: "";
-    position: fixed;
-    top: 0; 
-    left: 0;
-    right: 0;
-    height: 300px;
-    background: linear-gradient(135deg, var(--color-surface, #f8f9fa) 0%, var(--color-surface-variant, #e9ecef) 100%);
-    z-index: -1;
-    transition: background 0.3s ease;
+    background-color: var(--color-bg, #FAFAF8);
 }
 
 .main_background {

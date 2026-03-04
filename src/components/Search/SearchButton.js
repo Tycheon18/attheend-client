@@ -1,21 +1,2 @@
-import styles from './SearchButton.module.css';
-import LoadingSpinner from '../Common/LoadingSpinner';
-
-const SearchButton = ({ onClick, disabled }) => {
-    return (
-        <div className={styles.button_wrapper}>
-            <button
-                onClick={onClick}
-                disabled={disabled}
-            >
-                {disabled ? (
-                    <LoadingSpinner size="small" className={styles.inlineSpinner} />
-                ) : (
-                    "🔍 검색"
-                )}
-            </button>
-        </div>
-    );
-}
-
-export default SearchButton;
+// DEPRECATED: SearchBar.js로 통합됨. 이 파일은 사용되지 않습니다.
+export default null;

@@ -1,83 +1,37 @@
 import React, { useState, useEffect } from 'react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 const ReviewTitleInput = ({ value, onChange, showValidation = false }) => {
-    const [isTouched, setIsTouched] = useState(false);
-    const [validationState, setValidationState] = useState('none'); // none, valid, invalid
-    
-    const isEmpty = !value || !value.trim();
-    const isValid = !isEmpty;
-    
-    useEffect(() => {
-        if (isTouched || showValidation) {
-            setValidationState(isValid ? 'valid' : 'invalid');
-        } else {
-            setValidationState('none');
-        }
-    }, [value, isTouched, showValidation, isValid]);
-    
-    const getBorderColor = () => {
-        switch (validationState) {
-            case 'valid': return 'var(--color-success, #28a745)';
-            case 'invalid': return 'var(--color-error, #dc3545)';
-            default: return 'var(--color-input-border, #ddd)';
-        }
-    };
-    
-    const getValidationColor = () => {
-        switch (validationState) {
-            case 'valid': return 'var(--color-success, #28a745)';
-            case 'invalid': return 'var(--color-error, #dc3545)';
-            default: return 'var(--color-text-secondary, #666)';
-        }
-    };
-    
-    const handleBlur = () => {
-        setIsTouched(true);
-    };
-    
+    const [touched, setTouched] = useState(false);
+    const isValid = value?.trim().length > 0;
+    const showError = (touched || showValidation) && !isValid;
+    const showSuccess = (touched || showValidation) && isValid;
+
+    const borderCls = showError
+        ? 'border-cover-500 ring-1 ring-cover-500'
+        : showSuccess
+        ? 'border-emerald-400 ring-1 ring-emerald-400'
+        : 'border-linen-300';
+
     return (
         <div>
             <input
                 type="text"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                onBlur={handleBlur}
+                onBlur={() => setTouched(true)}
                 placeholder="책 제목을 입력하세요"
-                style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: `2px solid ${getBorderColor()}`,
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    backgroundColor: 'var(--color-input-background, #fff)',
-                    color: 'var(--color-text, #333)',
-                    transition: 'border-color 0.2s ease'
-                }}
+                className={`w-full px-4 py-3 text-sm bg-white border rounded-lg text-charcoal-900 placeholder:text-charcoal-400 outline-none focus:border-ink-400 focus:ring-1 focus:ring-ink-400 transition-colors duration-200 ${borderCls}`}
             />
-            
-            {/* 실시간 검증 피드백 */}
-            {validationState !== 'none' && (
-                <div style={{
-                    marginTop: '6px',
-                    fontSize: '14px',
-                    color: getValidationColor(),
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    {validationState === 'valid' && (
-                        <>
-                            <span>✅</span>
-                            <span>책 제목이 입력되었습니다</span>
-                        </>
-                    )}
-                    {validationState === 'invalid' && (
-                        <>
-                            <span>❌</span>
-                            <span>책 제목을 입력해주세요</span>
-                        </>
-                    )}
-                </div>
+            {showError && (
+                <p className="mt-1.5 text-xs text-cover-500 flex items-center gap-1">
+                    <AlertCircle className="w-3.5 h-3.5" /> 책 제목을 입력해주세요
+                </p>
+            )}
+            {showSuccess && (
+                <p className="mt-1.5 text-xs text-emerald-600 flex items-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5" /> 책 제목이 입력되었습니다
+                </p>
             )}
         </div>
     );

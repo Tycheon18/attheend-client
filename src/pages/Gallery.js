@@ -1,177 +1,89 @@
 import React, { useContext, useState, useMemo } from 'react';
-import Layout from '../components/Layout/Layout';
 import ReviewList from '../components/ReviewList/ReviewList';
 import { BookStateContext } from '../App';
-import styles from './Gallery.module.css';
+import { BookOpen, Star, Calendar, BookMarked, SlidersHorizontal } from 'lucide-react';
 
+// ── 통계 카드 ────────────────────────────────────────────
+const StatCard = ({ icon: Icon, value, label, colorCls }) => (
+    <div className={`flex flex-col items-center justify-center gap-1 p-5 rounded-xl text-white ${colorCls}`}>
+        <Icon className="w-6 h-6 mb-1 opacity-90" />
+        <span className="text-2xl font-bold tabular-nums">{value}</span>
+        <span className="text-xs opacity-80 font-medium">{label}</span>
+    </div>
+);
+
+// ── 셀렉트 공통 스타일 ───────────────────────────────────
+const selectCls =
+    'text-sm border border-linen-300 rounded-lg px-3 py-2 bg-white text-charcoal-700 outline-none ' +
+    'focus:border-ink-400 focus:ring-1 focus:ring-ink-400 transition-colors cursor-pointer';
+
+// ────────────────────────────────────────────────────────
 const Gallery = () => {
     const books = useContext(BookStateContext);
-    const [filter, setFilter] = useState('all'); // all, rating, date
-    const [sortOrder, setSortOrder] = useState('newest'); // newest, oldest, rating
+    const [filter, setFilter] = useState('all');
+    const [sortOrder, setSortOrder] = useState('newest');
 
     // 통계 계산
     const stats = useMemo(() => {
         if (!books || books.length === 0) return null;
-        
-        const totalBooks = books.length;
-        const totalRating = books.reduce((sum, book) => sum + (book.rating || 0), 0);
-        const averageRating = totalRating / totalBooks;
-        const fiveStarBooks = books.filter(book => book.rating === 5).length;
-        const recentBooks = books.filter(book => {
-            const bookDate = new Date(book.readingDate || book.createdAt);
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            return bookDate > thirtyDaysAgo;
-        }).length;
-
-        return {
-            totalBooks,
-            averageRating: averageRating.toFixed(1),
-            fiveStarBooks,
-            recentBooks
-        };
+        const total = books.length;
+        const avgRating = (books.reduce((s, b) => s + (b.rating || 0), 0) / total).toFixed(1);
+        const fiveStar = books.filter((b) => b.rating === 5).length;
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const recent = books.filter((b) => new Date(b.readingDate || b.createdAt) > thirtyDaysAgo).length;
+        return { total, avgRating, fiveStar, recent };
     }, [books]);
 
-    // 필터링 및 정렬된 책 목록
-    const filteredAndSortedBooks = useMemo(() => {
+    // 필터 + 정렬
+    const filtered = useMemo(() => {
         if (!books) return [];
-        
-        let filtered = [...books];
-        
-        // 필터링
-        if (filter === 'rating') {
-            filtered = filtered.filter(book => book.rating >= 4);
-        }
-        
-        // 정렬
-        switch (sortOrder) {
-            case 'newest':
-                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                break;
-            case 'oldest':
-                filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                break;
-            case 'rating':
-                filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-                break;
-            default:
-                break;
-        }
-        
-        return filtered;
+        let list = filter === 'rating' ? books.filter((b) => b.rating >= 4) : [...books];
+        const sorters = {
+            newest:  (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+            oldest:  (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+            rating:  (a, b) => (b.rating || 0) - (a.rating || 0),
+        };
+        return list.sort(sorters[sortOrder] || sorters.newest);
     }, [books, filter, sortOrder]);
 
     return (
-        <div className={styles.galleryContainer}>
-            <div className={styles.galleryHeader}>
-                <h2 className={styles.galleryTitle}>
-                    📚 내 갤러리
-                </h2>
-                <p className={styles.galleryDescription}>
-                    작성한 독후감들을 관리하고 확인하세요
+        <div className="max-w-[1100px] mx-auto px-6 py-10">
+
+            {/* ── 페이지 헤더 ── */}
+            <div className="mb-5">
+                <p className="eyebrow mb-1">내 갤러리</p>
+                <h1 className="section-heading text-2xl mb-1">나의 독서 기록</h1>
+                <p className="text-sm text-charcoal-500">
+                    작성한 독후감을 모아보고 읽기 이력을 관리하세요
                 </p>
             </div>
 
-            {/* 데이터가 있을 때만 통계 카드와 필터 표시 */}
             {books && books.length > 0 ? (
                 <>
-                    {/* 통계 카드 */}
+                    {/* ── 통계 카드 ── */}
                     {stats && (
-                        <div className={styles.statsGrid}>
-                            <div style={{
-                                backgroundColor: '#007bff',
-                                color: 'white',
-                                padding: '20px',
-                                borderRadius: '8px',
-                                textAlign: 'center'
-                            }}>
-                                <div style={{ fontSize: '2em', marginBottom: '5px' }}>📖</div>
-                                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{stats.totalBooks}</div>
-                                <div style={{ fontSize: '0.9em' }}>총 독후감</div>
-                            </div>
-                            
-                            <div style={{
-                                backgroundColor: '#28a745',
-                                color: 'white',
-                                padding: '20px',
-                                borderRadius: '8px',
-                                textAlign: 'center'
-                            }}>
-                                <div style={{ fontSize: '2em', marginBottom: '5px' }}>⭐</div>
-                                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{stats.averageRating}</div>
-                                <div style={{ fontSize: '0.9em' }}>평균 평점</div>
-                            </div>
-                            
-                            <div style={{
-                                backgroundColor: '#ffc107',
-                                color: 'white',
-                                padding: '20px',
-                                borderRadius: '8px',
-                                textAlign: 'center'
-                            }}>
-                                <div style={{ fontSize: '2em', marginBottom: '5px' }}>🌟</div>
-                                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{stats.fiveStarBooks}</div>
-                                <div style={{ fontSize: '0.9em' }}>5점 도서</div>
-                            </div>
-                            
-                            <div style={{
-                                backgroundColor: '#17a2b8',
-                                color: 'white',
-                                padding: '20px',
-                                borderRadius: '8px',
-                                textAlign: 'center'
-                            }}>
-                                <div style={{ fontSize: '2em', marginBottom: '5px' }}>📅</div>
-                                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>{stats.recentBooks}</div>
-                                <div style={{ fontSize: '0.9em' }}>최근 30일</div>
-                            </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                            <StatCard icon={BookOpen}   value={stats.total}    label="총 독후감"   colorCls="bg-ink-500" />
+                            <StatCard icon={Star}       value={stats.avgRating} label="평균 평점"  colorCls="bg-spine-600" />
+                            <StatCard icon={BookMarked} value={stats.fiveStar} label="5점 도서"    colorCls="bg-cover-500" />
+                            <StatCard icon={Calendar}   value={stats.recent}   label="최근 30일"   colorCls="bg-ink-400" />
                         </div>
                     )}
 
-                    {/* 필터 및 정렬 옵션 */}
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '20px',
-                        padding: '15px',
-                        backgroundColor: '#f8f9fa',
-                        borderRadius: '8px',
-                        border: '1px solid #e9ecef'
-                    }}>
-                        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                            <label style={{ fontSize: '14px', fontWeight: 'bold', color: '#495057' }}>
-                                필터:
-                            </label>
-                            <select 
-                                value={filter} 
-                                onChange={(e) => setFilter(e.target.value)}
-                                style={{
-                                    padding: '5px 10px',
-                                    border: '1px solid #ced4da',
-                                    borderRadius: '4px',
-                                    fontSize: '14px'
-                                }}
-                            >
+                    {/* ── 필터 + 정렬 바 ── */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-6 px-4 py-3 bg-linen-50 border border-linen-300 rounded-xl">
+                        <div className="flex items-center gap-2">
+                            <SlidersHorizontal className="w-4 h-4 text-charcoal-500" />
+                            <span className="text-sm font-semibold text-charcoal-700">필터</span>
+                            <select value={filter} onChange={(e) => setFilter(e.target.value)} className={selectCls}>
                                 <option value="all">전체</option>
                                 <option value="rating">4점 이상</option>
                             </select>
                         </div>
-                        
-                        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                            <label style={{ fontSize: '14px', fontWeight: 'bold', color: '#495057' }}>
-                                정렬:
-                            </label>
-                            <select 
-                                value={sortOrder} 
-                                onChange={(e) => setSortOrder(e.target.value)}
-                                style={{
-                                    padding: '5px 10px',
-                                    border: '1px solid #ced4da',
-                                    borderRadius: '4px',
-                                    fontSize: '14px'
-                                }}
-                            >
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-charcoal-700">정렬</span>
+                            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className={selectCls}>
                                 <option value="newest">최신순</option>
                                 <option value="oldest">오래된순</option>
                                 <option value="rating">평점순</option>
@@ -179,17 +91,13 @@ const Gallery = () => {
                         </div>
                     </div>
 
-                    {/* 독후감 목록 */}
-                    <ReviewList books={filteredAndSortedBooks} />
+                    <ReviewList books={filtered} />
                 </>
             ) : (
-                /* 데이터가 없을 때는 ReviewList의 빈 상태 UI만 표시 */
                 <ReviewList />
             )}
         </div>
     );
-}
+};
 
 export default Gallery;
-
-

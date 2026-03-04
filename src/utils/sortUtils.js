@@ -1,54 +1,27 @@
-// 검색 결과 정렬 유틸리티 함수들
-
-export const sortBookResults = (results, sortBy) => {
-    if (!results || results.length === 0) return results;
-
-    const sortedResults = [...results];
-
+/**
+ * 카카오 Books API 검색 결과 정렬 유틸
+ */
+export const sortBookResults = (books = [], sortBy = 'relevance') => {
+    const list = [...books];
     switch (sortBy) {
         case 'title':
-            return sortedResults.sort((a, b) => {
-                const titleA = a.title?.toLowerCase() || '';
-                const titleB = b.title?.toLowerCase() || '';
-                return titleA.localeCompare(titleB, 'ko-KR');
-            });
-
+            return list.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ko'));
         case 'authors':
-            return sortedResults.sort((a, b) => {
-                const authorsA = Array.isArray(a.authors) ? a.authors.join(', ').toLowerCase() : '';
-                const authorsB = Array.isArray(b.authors) ? b.authors.join(', ').toLowerCase() : '';
-                return authorsA.localeCompare(authorsB, 'ko-KR');
+            return list.sort((a, b) => {
+                const aA = (a.authors?.[0] || '');
+                const bA = (b.authors?.[0] || '');
+                return aA.localeCompare(bA, 'ko');
             });
-
         case 'publisher':
-            return sortedResults.sort((a, b) => {
-                const publisherA = a.publisher?.toLowerCase() || '';
-                const publisherB = b.publisher?.toLowerCase() || '';
-                return publisherA.localeCompare(publisherB, 'ko-KR');
-            });
-
+            return list.sort((a, b) => (a.publisher || '').localeCompare(b.publisher || '', 'ko'));
         case 'datetime':
-            return sortedResults.sort((a, b) => {
-                // 출간일 기준 정렬 (최신순)
-                const dateA = new Date(a.datetime || 0);
-                const dateB = new Date(b.datetime || 0);
-                return dateB - dateA; // 내림차순 (최신순)
+            return list.sort((a, b) => {
+                const aD = a.datetime ? new Date(a.datetime) : new Date(0);
+                const bD = b.datetime ? new Date(b.datetime) : new Date(0);
+                return bD - aD;
             });
-
         case 'relevance':
         default:
-            // 관련도순은 API에서 제공하는 기본 순서 유지
-            return results;
+            return list; // 원본 순서 유지 (카카오 API가 이미 관련도순)
     }
-};
-
-export const getSortDisplayName = (sortBy) => {
-    const sortNames = {
-        'relevance': '관련도순',
-        'title': '제목순',
-        'authors': '저자순', 
-        'publisher': '출판사순',
-        'datetime': '출간일순'
-    };
-    return sortNames[sortBy] || '관련도순';
 };

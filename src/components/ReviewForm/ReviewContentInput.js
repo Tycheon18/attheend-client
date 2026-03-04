@@ -1,133 +1,69 @@
 import React, { useState, useEffect } from 'react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
+
+const MAX_LENGTH = 2000;
+const WARN_AT = 1800;
 
 const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
-    const [isTouched, setIsTouched] = useState(false);
-    const [validationState, setValidationState] = useState('none'); // none, valid, invalid
-    
-    const MAX_LENGTH = 2000;
-    const WARNING_THRESHOLD = 1800;
-    const currentLength = value?.length || 0;
-    const isEmpty = !value || !value.trim();
-    const isValid = !isEmpty && currentLength > 0;
-    
-    useEffect(() => {
-        if (isTouched || showValidation) {
-            setValidationState(isValid ? 'valid' : 'invalid');
-        } else {
-            setValidationState('none');
-        }
-    }, [value, isTouched, showValidation, isValid]);
-    
-    const getCharacterCountColor = () => {
-        if (currentLength >= MAX_LENGTH) return 'var(--color-error, #dc3545)'; // Red when at limit
-        if (currentLength >= WARNING_THRESHOLD) return 'var(--color-warning, #ffc107)'; // Yellow when approaching limit
-        return 'var(--color-text-secondary, #666)'; // Gray for normal state
-    };
-    
-    const getBorderColor = () => {
-        // Validation state takes priority over character count colors
-        if (validationState === 'valid' && currentLength < WARNING_THRESHOLD) return 'var(--color-success, #28a745)';
-        if (validationState === 'invalid') return 'var(--color-error, #dc3545)';
-        
-        // Character count based colors
-        if (currentLength >= MAX_LENGTH) return 'var(--color-error, #dc3545)';
-        if (currentLength >= WARNING_THRESHOLD) return 'var(--color-warning, #ffc107)';
-        return 'var(--color-input-border, #ddd)';
-    };
-    
-    const handleBlur = () => {
-        setIsTouched(true);
-    };
-    
+    const [touched, setTouched] = useState(false);
+    const len = value?.length || 0;
+    const isValid = value?.trim().length > 0;
+    const showError = (touched || showValidation) && !isValid;
+    const showSuccess = (touched || showValidation) && isValid && len < WARN_AT;
+
+    const borderCls = showError
+        ? 'border-cover-500 ring-1 ring-cover-500'
+        : len >= MAX_LENGTH
+        ? 'border-cover-500'
+        : len >= WARN_AT
+        ? 'border-amber-400'
+        : showSuccess
+        ? 'border-emerald-400'
+        : 'border-linen-300';
+
+    const counterCls = len >= MAX_LENGTH
+        ? 'text-cover-500 font-bold'
+        : len >= WARN_AT
+        ? 'text-amber-500 font-semibold'
+        : 'text-charcoal-400';
+
     const handleChange = (e) => {
-        const newValue = e.target.value;
-        if (newValue.length <= MAX_LENGTH) {
-            onChange(newValue);
-        }
+        if (e.target.value.length <= MAX_LENGTH) onChange(e.target.value);
     };
-    
+
     return (
         <div>
             <textarea
                 value={value}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => setTouched(true)}
                 placeholder="독후감 내용을 자유롭게 작성해주세요..."
                 rows={10}
-                style={{
-                    width: '100%',
-                    padding: '12px',
-                    border: `2px solid ${getBorderColor()}`,
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    fontFamily: 'inherit',
-                    resize: 'vertical',
-                    minHeight: '200px',
-                    backgroundColor: 'var(--color-input-background, #fff)',
-                    color: 'var(--color-text, #333)',
-                    transition: 'border-color 0.2s ease'
-                }}
+                className={`w-full px-4 py-3 text-sm bg-white border rounded-lg text-charcoal-900 placeholder:text-charcoal-400 outline-none focus:border-ink-400 focus:ring-1 focus:ring-ink-400 resize-vertical min-h-[200px] font-sans leading-relaxed transition-colors duration-200 ${borderCls}`}
             />
-            
-            {/* 실시간 검증 피드백 */}
-            {validationState !== 'none' && (
-                <div style={{
-                    marginTop: '6px',
-                    fontSize: '14px',
-                    color: validationState === 'valid' ? 'var(--color-success, #28a745)' : 'var(--color-error, #dc3545)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    {validationState === 'valid' && (
-                        <>
-                            <span>✅</span>
-                            <span>독후감 내용이 입력되었습니다</span>
-                        </>
+
+            {/* 검증 메시지 + 글자수 */}
+            <div className="mt-1.5 flex items-center justify-between">
+                <div className="text-xs">
+                    {showError && (
+                        <p className="text-cover-500 flex items-center gap-1">
+                            <AlertCircle className="w-3.5 h-3.5" /> 독후감 내용을 입력해주세요
+                        </p>
                     )}
-                    {validationState === 'invalid' && (
-                        <>
-                            <span>❌</span>
-                            <span>독후감 내용을 입력해주세요</span>
-                        </>
+                    {showSuccess && (
+                        <p className="text-emerald-600 flex items-center gap-1">
+                            <CheckCircle className="w-3.5 h-3.5" /> 독후감 내용이 입력되었습니다
+                        </p>
+                    )}
+                    {len >= WARN_AT && (
+                        <p className="text-amber-500">
+                            {len >= MAX_LENGTH ? '⚠️ 최대 글자 수에 도달했습니다' : '⚡ 글자 수 제한에 가까워졌습니다'}
+                        </p>
                     )}
                 </div>
-            )}
-            
-            {/* 글자 수 카운터 및 안내 메시지 */}
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: '8px',
-                fontSize: '14px'
-            }}>
-                <div style={{
-                    color: currentLength >= WARNING_THRESHOLD ? getCharacterCountColor() : 'var(--color-text-secondary, #666)'
-                }}>
-                    {currentLength >= WARNING_THRESHOLD && (
-                        <span>
-                            {currentLength >= MAX_LENGTH ? '⚠️ ' : '⚡ '}
-                            {currentLength >= MAX_LENGTH 
-                                ? '최대 글자 수에 도달했습니다' 
-                                : '글자 수 제한에 가까워졌습니다'
-                            }
-                        </span>
-                    )}
-                </div>
-                
-                <div style={{
-                    color: getCharacterCountColor(),
-                    fontWeight: currentLength >= WARNING_THRESHOLD ? 'bold' : 'normal',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                }}>
-                    <span>{currentLength.toLocaleString()}</span>
-                    <span>/</span>
-                    <span>{MAX_LENGTH.toLocaleString()}</span>
-                    {currentLength >= MAX_LENGTH && <span>🚫</span>}
-                </div>
+                <span className={`text-xs tabular-nums ${counterCls}`}>
+                    {len.toLocaleString()} / {MAX_LENGTH.toLocaleString()}
+                </span>
             </div>
         </div>
     );

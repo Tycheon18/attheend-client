@@ -1,114 +1,99 @@
+import { useState, useEffect, useRef } from 'react';
+import { Search } from 'lucide-react';
+import { useToast } from '../Common/Toast';
 
-import SearchButton from "./SearchButton"
-import SearchInput from "./SearchInput"
-import styles from "./SearchBar.module.css"
-import { useState, useEffect, useRef } from "react"
-import { useToast } from '../Common/Toast'
+const CATEGORY_LIST = [
+    { value: 'all',       label: '전체'   },
+    { value: 'title',     label: '책 제목' },
+    { value: 'authors',   label: '저자'   },
+    { value: 'publisher', label: '출판사' },
+];
 
-const searchCategoryList = [
-    { value: "all", label: "전체"},
-    { value: "title", label: "책 제목"},
-    { value: "authors", label: "저자"},
-    { value: "publisher", label: "출판사"},
-]
+const DEBOUNCE_DELAY = 800;
 
 const SearchBar = ({ onSearch }) => {
-    const [category, setCategory] = useState("all");
-    const [query, setQuery] = useState("");
+    const [category, setCategory] = useState('all');
+    const [query, setQuery] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    
-    // 디바운싱을 위한 ref
     const debounceTimer = useRef(null);
-    const DEBOUNCE_DELAY = 800; // 800ms 디바운싱
-    
-    // 토스트 훅 사용
     const { addToast } = useToast();
 
-    const onChangeCategoryType = (e) => {
-        setCategory(e.target.value);
-    };
-
-    const onChangeQuery = (e) => {
-        setQuery(e.target.value);
-    }
-    
-    // 쿼리나 카테고리 변경 시 디바운스된 검색 실행
+    // 디바운스 자동 검색 (2글자 이상)
     useEffect(() => {
-        // 이전 타이머 클리어
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-        }
-        
-        // 2글자 이상일 때만 새로운 타이머 설정
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
         if (query.trim().length >= 2) {
-            debounceTimer.current = setTimeout(() => {
-                handleSearch(category, query);
-            }, DEBOUNCE_DELAY);
+            debounceTimer.current = setTimeout(() => handleSearch(category, query), DEBOUNCE_DELAY);
         }
-        
-        // 컴포넌트 언마운트 시 타이머 정리
-        return () => {
-            if (debounceTimer.current) {
-                clearTimeout(debounceTimer.current);
-            }
-        };
+        return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
     }, [query, category]);
 
     const handleSearch = async (searchCategory = category, searchQuery = query) => {
         if (!searchQuery.trim()) return;
-        
         if (searchQuery.trim().length < 2) {
             addToast('검색어는 2글자 이상 입력해주세요.', 'warning');
             return;
         }
-        
-        // 디바운스된 검색의 경우 타이머 클리어
-        if (debounceTimer.current) {
-            clearTimeout(debounceTimer.current);
-            debounceTimer.current = null;
-        }
-        
+        if (debounceTimer.current) { clearTimeout(debounceTimer.current); debounceTimer.current = null; }
         setLoading(true);
-        setError(null);
-
         try {
             await onSearch({ category: searchCategory, query: searchQuery });
-        } catch (err) {
-            setError(err.message);
         } finally {
             setLoading(false);
         }
-    }
-
-    const handleClick = () => {
-        handleSearch();
-    }
-
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    }
+    };
 
     return (
-        <div className={styles.searchContainer}>
+        <div className="w-full">
+            <div className="flex rounded-lg border border-linen-300 overflow-hidden bg-white shadow-sm focus-within:border-ink-400 focus-within:ring-1 focus-within:ring-ink-400 transition-all duration-200">
 
-            <div className={styles.Bar}>
-                <div className={styles.category_wrapper}>
-                    <select value={category} onChange={onChangeCategoryType}>
-                        {searchCategoryList.map((it, idx) => (
-                            <option key={idx} value={it.value}>
-                                {it.label}
-                            </option>
+                {/* 카테고리 select — appearance-none + 커스텀 화살표로 간격 제어 */}
+                <div className="relative flex-shrink-0" style={{ borderRight: '1px solid #D8D2C8' }}>
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="appearance-none bg-linen-50 border-none text-sm py-3.5 pl-4 pr-9 text-charcoal-700 outline-none cursor-pointer h-full"
+                    >
+                        {CATEGORY_LIST.map((it) => (
+                            <option key={it.value} value={it.value}>{it.label}</option>
                         ))}
                     </select>
-                </div>    
-                <SearchInput value={query} onChange={onChangeQuery} onKeyPress={handleKeyPress} />
-                <SearchButton onClick={handleClick} disabled={loading} />
+                    {/* 커스텀 드롭다운 화살표 — 구분선과 간격 확보 */}
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-charcoal-500">
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                    </span>
+                </div>
+
+                {/* 텍스트 입력 */}
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                    placeholder="책 제목, 저자, 출판사를 검색해보세요..."
+                    className="flex-1 min-w-0 bg-transparent border-none outline-none text-sm py-3.5 px-4 text-charcoal-900 placeholder:text-charcoal-500 font-sans"
+                />
+
+                {/* 검색 버튼 */}
+                <button
+                    onClick={() => handleSearch()}
+                    disabled={loading}
+                    className="btn-ink text-sm px-5 m-1.5 rounded flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                    ) : (
+                        <Search className="w-4 h-4" />
+                    )}
+                    검색
+                </button>
             </div>
         </div>
     );
-}
+};
 
 export default SearchBar;

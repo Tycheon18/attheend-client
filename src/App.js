@@ -3,6 +3,7 @@ import './App.css';
 import Layout from './components/Layout/Layout';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
+import LandingPage from './pages/LandingPage';
 import Search from './pages/Search';
 import New from './pages/New';
 import Edit from './pages/Edit';
@@ -116,7 +117,7 @@ function App() {
             <BookIdContext.Provider value={idRef}>
               <BrowserRouter>
                 <Routes>
-                  <Route path="/" element={<Layout><Main /></Layout>} />
+                  <Route path="/" element={<LandingPage />} />
                   <Route path="/search" element={<Layout><Search /></Layout>} />
                   <Route path="/new" element={<Layout><New /></Layout>} />
                   <Route path="/edit/:id" element={<Layout><Edit /></Layout>} />

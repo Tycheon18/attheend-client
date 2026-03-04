@@ -239,6 +239,13 @@ export const ThemeProvider = ({ children }) => {
         document.body.style.backgroundColor = colors.background;
         document.body.style.color = colors.text;
         document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+
+        // Tailwind darkMode: 'class' 연동 — <html class="dark"> 토글
+        if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
         
     }, [theme]);
     
