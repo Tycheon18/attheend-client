@@ -25,6 +25,7 @@ const Search = () => {
 
     useEffect(() => {
         if (query) performSearch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [query, target, page]);
 
     const performSearch = async () => {
@@ -72,22 +73,14 @@ const Search = () => {
 
     return (
         <div className="max-w-[1100px] mx-auto px-6 py-10">
-
-            {/* ── 페이지 헤더 ── */}
             <div className="mb-5">
                 <p className="eyebrow mb-1">도서 검색</p>
                 <h1 className="section-heading text-2xl">원하는 책을 찾아보세요</h1>
             </div>
-
-            {/* ── 검색바 ── */}
             <div className="mb-4">
                 <SearchBar onSearch={handleNewSearch} />
             </div>
-
-            {/* ── 최근 검색어 ── */}
             <RecentSearches onSearchSelect={handleNewSearch} show={true} />
-
-            {/* ── 검색 조건 표시 ── */}
             {query && (
                 <div className="mt-5 mb-2 flex items-center gap-2 text-sm text-charcoal-700">
                     <span className="text-charcoal-500">검색 조건</span>
@@ -101,18 +94,12 @@ const Search = () => {
                     )}
                 </div>
             )}
-
-            {/* ── 정렬 옵션 ── */}
             {query && !loading && !error && (
                 <SortOptions sortBy={sortBy} onSortChange={handleSortChange} resultsCount={totalCount} />
             )}
-
-            {/* ── 검색 결과 ── */}
             <div className="mt-4">
                 <BookList data={results} loading={loading} error={error} />
             </div>
-
-            {/* ── 페이지네이션 ── */}
             {!loading && !error && totalCount > 0 && (
                 <div className="mt-8">
                     <Pagination
