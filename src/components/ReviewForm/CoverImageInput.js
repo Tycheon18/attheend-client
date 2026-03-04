@@ -1,148 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import ImageWithFallback from '../Common/ImageWithFallback';
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+
+const isValidUrl = (url) => { try { new URL(url); return true; } catch { return false; } };
+const isImageUrl = (url) =>
+    /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url) ||
+    /^https?:\/\/(search\.daum\.net|img\d*\.daumcdn\.net|t\d*\.daumcdn\.net)/i.test(url) ||
+    /^https?:\/\/(.*\.(amazonaws\.com|googleusercontent\.com|imgur\.com|cloudinary\.com))/i.test(url) ||
+    /\/(image|img|cover|thumbnail|photo|pic)/i.test(url);
 
 const CoverImageInput = ({ value, onChange }) => {
-    const [validationState, setValidationState] = useState('none'); // none, validating, valid, invalid
-    const [validationMessage, setValidationMessage] = useState('');
-
-    const isValidUrl = (url) => {
-        try {
-            new URL(url);
-            return true;
-        } catch {
-            return false;
-        }
-    };
-
-    const isImageUrl = (url) => {
-        // 카카오 API나 기타 책 표지 이미지 URL 패턴 허용
-        // 1. 일반적인 이미지 확장자 체크
-        if (/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url)) {
-            return true;
-        }
-        
-        // 2. 카카오 API URL 패턴 (search.daum.net, img1.daumcdn.net 등)
-        if (/^https?:\/\/(search\.daum\.net|img\d*\.daumcdn\.net|t\d*\.daumcdn\.net)/i.test(url)) {
-            return true;
-        }
-        
-        // 3. 기타 일반적인 이미지 호스팅 URL 패턴
-        if (/^https?:\/\/(.*\.(amazonaws\.com|googleusercontent\.com|imgur\.com|cloudinary\.com))/i.test(url)) {
-            return true;
-        }
-        
-        // 4. URL에 'image', 'cover', 'thumbnail' 등 이미지 관련 키워드가 포함된 경우
-        if (/\/(image|img|cover|thumbnail|photo|pic)/i.test(url)) {
-            return true;
-        }
-        
-        return false;
-    };
-
-    const validateImageUrl = async (url) => {
-        // 안전장치: 유효하지 않은 입력 체크
-        if (!url || typeof url !== 'string' || !url.trim()) {
-            setValidationState('none');
-            setValidationMessage('');
-            return;
-        }
-
-        const trimmedUrl = url.trim();
-
-        if (!isValidUrl(trimmedUrl)) {
-            setValidationState('invalid');
-            setValidationMessage('올바른 URL 형식이 아닙니다');
-            return;
-        }
-
-        if (!isImageUrl(trimmedUrl)) {
-            setValidationState('invalid');
-            setValidationMessage('이미지 URL 형식이 인식되지 않습니다. 이미지 파일이나 책 표지 URL인지 확인해주세요.');
-            return;
-        }
-
-        setValidationState('validating');
-        setValidationMessage('이미지를 확인하고 있습니다...');
-
-        try {
-            const img = new Image();
-            
-            // CORS 문제 방지를 위해 crossOrigin 설정
-            img.crossOrigin = 'anonymous';
-            
-            // 타임아웃 설정 (10초로 늘림 - 외부 API 응답 고려)
-            const timeoutId = setTimeout(() => {
-                setValidationState('warning');
-                setValidationMessage('⏰ 이미지 로딩이 지연되고 있지만 사용 가능할 수 있습니다');
-            }, 10000);
-            
-            img.onload = () => {
-                clearTimeout(timeoutId);
-                setValidationState('valid');
-                setValidationMessage('✅ 유효한 이미지입니다');
-            };
-            
-            img.onerror = () => {
-                clearTimeout(timeoutId);
-                // HTTP URL의 경우 HTTPS 사이트에서 로딩 실패할 수 있으므로 경고로 처리
-                if (trimmedUrl.startsWith('http://')) {
-                    setValidationState('warning');
-                    setValidationMessage('⚠️ HTTP 이미지는 일부 브라우저에서 로딩되지 않을 수 있습니다');
-                } else {
-                    setValidationState('invalid');
-                    setValidationMessage('이미지를 불러올 수 없습니다');
-                }
-            };
-            
-            img.src = trimmedUrl;
-        } catch (error) {
-            console.warn('Image validation error:', error);
-            setValidationState('warning');
-            setValidationMessage('⚠️ 이미지 검증에 실패했지만 사용 가능할 수 있습니다');
-        }
-    };
+    const [state, setState] = useState('none'); // none | validating | valid | warning | invalid
+    const [msg, setMsg] = useState('');
 
     useEffect(() => {
-        // 컴포넌트 마운트 시 즉시 상태 초기화
-        if (!value || !value.trim()) {
-            setValidationState('none');
-            setValidationMessage('');
-            return;
-        }
-        
-        // 유효한 값이 있을 때만 검증 실행
+        if (!value?.trim()) { setState('none'); setMsg(''); return; }
         const timer = setTimeout(() => {
-            try {
-                validateImageUrl(value);
-            } catch (error) {
-                console.warn('Image validation error:', error);
-                setValidationState('none');
-                setValidationMessage('');
-            }
-        }, 500); // 0.5초 디바운싱
-        
+            if (!isValidUrl(value)) { setState('invalid'); setMsg('올바른 URL 형식이 아닙니다'); return; }
+            if (!isImageUrl(value)) { setState('invalid'); setMsg('이미지 URL 형식이 인식되지 않습니다'); return; }
+            setState('validating'); setMsg('이미지를 확인하고 있습니다...');
+            const img = new Image();
+            // crossOrigin 제거: 카카오 등 외부 이미지는 CORS 헤더 없어도 <img>로 표시 가능
+            const t = setTimeout(() => { setState('warning'); setMsg('이미지 로딩이 지연되고 있지만 사용 가능할 수 있습니다'); }, 10000);
+            img.onload = () => { clearTimeout(t); setState('valid'); setMsg('유효한 이미지입니다'); };
+            img.onerror = () => {
+                clearTimeout(t);
+                // onerror가 발생해도 실제 렌더링은 가능한 경우가 있으므로 warning 처리
+                setState('warning');
+                setMsg('이미지를 미리 확인할 수 없지만, 저장 후 표시될 수 있습니다');
+            };
+            img.src = value;
+        }, 500);
         return () => clearTimeout(timer);
     }, [value]);
 
-    const getBorderColor = () => {
-        switch (validationState) {
-            case 'valid': return 'var(--color-success, #28a745)';
-            case 'invalid': return 'var(--color-error, #dc3545)';
-            case 'warning': return 'var(--color-warning, #ffc107)';
-            case 'validating': return 'var(--color-primary, #007bff)';
-            default: return 'var(--color-input-border, #ddd)';
-        }
-    };
+    const borderCls = {
+        valid: 'border-emerald-400 focus:border-emerald-400 focus:ring-emerald-400',
+        invalid: 'border-cover-500 focus:border-cover-500 focus:ring-cover-500',
+        warning: 'border-amber-400 focus:border-amber-400 focus:ring-amber-400',
+        validating: 'border-ink-400 focus:border-ink-400 focus:ring-ink-400',
+    }[state] || 'border-linen-300 focus:border-ink-400 focus:ring-ink-400';
 
-    const getValidationColor = () => {
-        switch (validationState) {
-            case 'valid': return 'var(--color-success, #28a745)';
-            case 'invalid': return 'var(--color-error, #dc3545)';
-            case 'warning': return 'var(--color-warning, #ffc107)';
-            case 'validating': return 'var(--color-primary, #007bff)';
-            default: return 'var(--color-text-secondary, #666)';
-        }
-    };
+    const MsgIcon = { valid: CheckCircle, invalid: AlertCircle, warning: AlertCircle, validating: Loader2 }[state];
+    const msgCls = { valid: 'text-emerald-600', invalid: 'text-cover-500', warning: 'text-amber-500', validating: 'text-ink-500' }[state] || '';
 
     return (
         <div>
@@ -151,65 +51,25 @@ const CoverImageInput = ({ value, onChange }) => {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="https://example.com/book-cover.jpg"
-                style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: `2px solid ${getBorderColor()}`,
-                    borderRadius: '4px',
-                    fontSize: '16px',
-                    backgroundColor: 'var(--color-input-background, #fff)',
-                    color: 'var(--color-text, #333)',
-                    transition: 'border-color 0.2s ease'
-                }}
+                className={`w-full px-4 py-3 text-sm bg-white border rounded-lg text-charcoal-900 placeholder:text-charcoal-400 outline-none ring-1 ring-transparent transition-colors duration-200 ${borderCls}`}
             />
-            
-            {/* 검증 피드백 메시지 */}
-            {validationMessage && (
-                <div style={{
-                    marginTop: '8px',
-                    fontSize: '14px',
-                    color: getValidationColor(),
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                }}>
-                    {validationState === 'validating' && (
-                        <div style={{
-                            width: '12px',
-                            height: '12px',
-                            border: '2px solid #007bff',
-                            borderTop: '2px solid transparent',
-                            borderRadius: '50%',
-                            animation: 'spin 1s linear infinite'
-                        }} />
-                    )}
-                    {validationMessage}
-                </div>
+
+            {msg && MsgIcon && (
+                <p className={`mt-1.5 text-xs flex items-center gap-1 ${msgCls}`}>
+                    <MsgIcon className={`w-3.5 h-3.5 flex-shrink-0 ${state === 'validating' ? 'animate-spin' : ''}`} />
+                    {msg}
+                </p>
             )}
 
-            {/* 이미지 미리보기 */}
-            {value && (validationState === 'valid' || validationState === 'warning') && (
-                <div style={{ marginTop: '15px' }}>
+            {value && (state === 'valid' || state === 'warning') && (
+                <div className="mt-3">
                     <ImageWithFallback
                         src={value}
                         alt="책 표지 미리보기"
-                        style={{
-                            maxWidth: '150px',
-                            maxHeight: '200px',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                        }}
+                        style={{ maxWidth: '120px', maxHeight: '168px', borderRadius: '4px', border: '1px solid #D8D2C8' }}
                     />
                 </div>
             )}
-            
-            <style jsx>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 };
