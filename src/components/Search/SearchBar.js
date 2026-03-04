@@ -18,15 +18,6 @@ const SearchBar = ({ onSearch }) => {
     const debounceTimer = useRef(null);
     const { addToast } = useToast();
 
-    // 디바운스 자동 검색 (2글자 이상)
-    useEffect(() => {
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
-        if (query.trim().length >= 2) {
-            debounceTimer.current = setTimeout(() => handleSearch(category, query), DEBOUNCE_DELAY);
-        }
-        return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
-    }, [query, category]);
-
     const handleSearch = async (searchCategory = category, searchQuery = query) => {
         if (!searchQuery.trim()) return;
         if (searchQuery.trim().length < 2) {
@@ -42,11 +33,18 @@ const SearchBar = ({ onSearch }) => {
         }
     };
 
+    useEffect(() => {
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+        if (query.trim().length >= 2) {
+            debounceTimer.current = setTimeout(() => handleSearch(category, query), DEBOUNCE_DELAY);
+        }
+        return () => { if (debounceTimer.current) clearTimeout(debounceTimer.current); };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [query, category]);
+
     return (
         <div className="w-full">
             <div className="flex rounded-lg border border-linen-300 overflow-hidden bg-white shadow-sm focus-within:border-ink-400 focus-within:ring-1 focus-within:ring-ink-400 transition-all duration-200">
-
-                {/* 카테고리 select — appearance-none + 커스텀 화살표로 간격 제어 */}
                 <div className="relative flex-shrink-0" style={{ borderRight: '1px solid #D8D2C8' }}>
                     <select
                         value={category}
@@ -57,15 +55,12 @@ const SearchBar = ({ onSearch }) => {
                             <option key={it.value} value={it.value}>{it.label}</option>
                         ))}
                     </select>
-                    {/* 커스텀 드롭다운 화살표 — 구분선과 간격 확보 */}
                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-charcoal-500">
                         <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
                     </span>
                 </div>
-
-                {/* 텍스트 입력 */}
                 <input
                     type="text"
                     value={query}
@@ -74,8 +69,6 @@ const SearchBar = ({ onSearch }) => {
                     placeholder="책 제목, 저자, 출판사를 검색해보세요..."
                     className="flex-1 min-w-0 bg-transparent border-none outline-none text-sm py-3.5 px-4 text-charcoal-900 placeholder:text-charcoal-500 font-sans"
                 />
-
-                {/* 검색 버튼 */}
                 <button
                     onClick={() => handleSearch()}
                     disabled={loading}

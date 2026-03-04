@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 const MAX_LENGTH = 2000;
@@ -41,8 +41,6 @@ const ReviewContentInput = ({ value, onChange, showValidation = false }) => {
                 rows={10}
                 className={`w-full px-4 py-3 text-sm bg-white border rounded-lg text-charcoal-900 placeholder:text-charcoal-400 outline-none focus:border-ink-400 focus:ring-1 focus:ring-ink-400 resize-vertical min-h-[200px] font-sans leading-relaxed transition-colors duration-200 ${borderCls}`}
             />
-
-            {/* 검증 메시지 + 글자수 */}
             <div className="mt-1.5 flex items-center justify-between">
                 <div className="text-xs">
                     {showError && (
