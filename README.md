@@ -38,7 +38,7 @@ A React-based web client for managing book reviews with search functionality, po
 - **React Router** 7.6 - Client-side routing
 - **Kakao Book API** - Book search functionality
 - **localStorage** - Data persistence
-- **CSS Modules** - Scoped styling
+- **Tailwind CSS** - Utility-first styling
 
 ## 📦 Installation
 
@@ -53,94 +53,38 @@ cd attheend-client
 npm install
 ```
 
-3. Create `.env` file from `.env.example`:
-```bash
-cp .env.example .env
-```
-
-4. Get your Kakao REST API key from [Kakao Developers](https://developers.kakao.com/) and add it to `.env`:
+3. Create `.env` file:
 ```
 REACT_APP_KAKAO_API_KEY=your_kakao_rest_api_key_here
 ```
 
-5. Start the development server:
+4. Start the development server:
 ```bash
 npm start
 ```
-
-The app will open at [http://localhost:3000](http://localhost:3000)
 
 ## 📁 Project Structure
 
 ```
 src/
-├── api/               # API utilities
 ├── components/
-│   ├── Common/        # Reusable components (Toast, Loading, Error, ThemeToggle)
-│   ├── Layout/        # Layout components (Header, Footer, Layout)
-│   ├── List/          # Book search results list
-│   ├── Pagination/    # Pagination component
+│   ├── Common/        # Toast, Loading, ThemeToggle
+│   ├── Layout/        # Layout, Navbar
+│   ├── List/          # Book search results
+│   ├── Pagination/    # Pagination
 │   ├── ReviewForm/    # Review creation form
-│   ├── ReviewList/    # Review list display
-│   └── Search/        # Search-related components
-├── contexts/          # React contexts (ThemeContext)
+│   ├── ReviewList/    # Review display
+│   ├── Search/        # Search components
+│   └── ui/            # Reusable UI components
+├── contexts/          # ThemeContext
 ├── pages/             # Page components
-│   ├── Main.js        # Home page
-│   ├── Search.js      # Search page
-│   ├── New.js         # Create review
-│   ├── Edit.js        # Edit review
-│   └── Gallery.js     # Gallery view
-├── utils/             # Utility functions
-│   ├── recentSearchUtils.js  # Recent search management
-│   └── sortUtils.js          # Sorting logic
-└── App.js             # Main app component
+└── utils/             # Utility functions
 ```
-
-## 🔑 Key Features
-
-### State Management
-- React Context API for global state
-- useReducer hook for CRUD operations
-- localStorage synchronization
-
-### Routing
-```
-/ → Main page
-/search → Book search
-/new → Create review
-/edit/:id → Edit review
-/gallery → Review gallery
-```
-
-### Data Flow
-```
-User Action → dispatch(action) 
-  → reducer(state, action) 
-  → localStorage sync 
-  → new state → UI update
-```
-
-## 🎯 Available Scripts
-
-- `npm start` - Run development server
-- `npm build` - Build for production
-- `npm test` - Run tests
-- `npm eject` - Eject from Create React App
 
 ## 🔗 Related Projects
 
-- [attheend-server](https://github.com/Tycheon18/attheend-server) - Backend API server (Node.js/Express)
+- [attheend-server](https://github.com/Tycheon18/attheend-server) - Backend API server
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👤 Author
-
-**Tycheon18**
-- GitHub: [@Tycheon18](https://github.com/Tycheon18)
-
-## 🙏 Acknowledgments
-
-- [Kakao Developers](https://developers.kakao.com/) - Book search API
-- [Create React App](https://create-react-app.dev/) - React project setup
+MIT License — **Tycheon18**
