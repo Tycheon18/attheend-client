@@ -77,14 +77,14 @@ const ReviewItem = ({ book }) => {
                         className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded border border-linen-300 text-charcoal-700 hover:bg-linen-50 hover:border-ink-300 hover:text-ink-500 transition-colors"
                     >
                         <Pencil className="w-3 h-3" />
-                        \uc218\uc815
+                        수정
                     </button>
                     <button
                         onClick={handleDelete}
                         className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded border border-linen-300 text-charcoal-700 hover:bg-red-50 hover:border-red-300 hover:text-cover-500 transition-colors"
                     >
                         <Trash2 className="w-3 h-3" />
-                        \uc0ad\uc81c
+                        삭제
                     </button>
                 </div>
             </div>
